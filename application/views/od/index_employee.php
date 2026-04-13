@@ -1,33 +1,40 @@
-
 <main class="main mainheight">
-<div class="container-fluid">
-<div class="row" style="margin-top: 10px;">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">List Employee - Report To</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="dt_employee" class="display" style="min-width: 100%">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Employee</th>
-                                <th>Company</th>
-                                <th>Department</th>
-                                <th>Designation</th>
-                                <th>Report To</th>
-                            </tr>
-                        </thead>
-                    </table>
+    <div class="m-3">
+        <div class="col-12 col-lg-12 col-xl-12 col-xxl-12 position-relative column-set">
+            <div class="card border-0">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <i class="bi bi-diagram-2 h5 avatar avatar-40 bg-light-theme rounded"></i>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <h6 class="fw-medium">Report To</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style="padding: 10px;">
+                        <table id="dt_employee" class="table table-sm table-striped" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Employee</th>
+                                    <th>Company</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Report To</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-</div>
 </main>
 
 <div class="modal fade" id="modal_edit_emp">

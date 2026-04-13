@@ -1,30 +1,38 @@
 <main class="main mainheight">
-<div class="container-fluid">
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="col-6">
-                    <h4 class="card-title">Inventory</h4>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-rounded btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_add" style="float:right;margin-left:4px">
-                        <i class="fa fa-plus-circle color-primary"></i>
-                        Add Inven.</button>
-                    <button type="button" class="btn btn-rounded btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_request" style="float:right">
-                        <i class="fa fa-address-card color-primary"></i> Request</button>
-                    <!-- Test by Ade -->
-                    <!-- <select class="form-control select2" name="test_multi[]" id="select_test_multi" multiple>
-                    </select> -->
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-10">
+    <div class="m-3">
+        <div class="col-12 col-lg-12 col-xl-12 col-xxl-12 position-relative column-set">
+            <div class="card border-0">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <i class="bi bi-archive h5 avatar avatar-40 bg-light-theme rounded"></i>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <h6 class="fw-medium">Inventory</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row justify-content-end">
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#modal_request">
+                                        <i class="bi bi-card-text"></i> Request
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#modal_add">
+                                        <i class="bi bi-plus-circle"></i> Add Inven.
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table id="table_sop" class="table table-striped" style="">
+                <div class="card-body">
+                    <div class="table-responsive" style="padding: 10px;">
+                        <table id="table_sop" class="table table-sm table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>REVIEW</th>
@@ -49,11 +57,13 @@
                         <tbody>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
+
 <div class="modal fade" id="modal_review">
     <div class="modal-dialog modal-lg" role="document" style="position: absolute;max-width: 75%;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">
         <div class="modal-content">
@@ -1094,6 +1104,4 @@ Departement	: (Sesuai Dengan Divisi Yang dipilih)</textarea>
             </div>
         </div>
     </div>
-</div>
-</main>
 </div>

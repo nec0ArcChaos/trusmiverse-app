@@ -1,15 +1,22 @@
 <main class="main mainheight">
-<div class="container-fluid">
-<div class="row" style="margin-top: 10px;">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="col-6">
-                    <h4 class="card-title">Add Dokumen Genba</h4>
+    <div class="m-3">
+        <div class="col-12 col-lg-12 col-xl-12 col-xxl-12 position-relative column-set">
+            <div class="card border-0">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <i class="bi bi-file-earmark-plus h5 avatar avatar-40 bg-light-theme rounded"></i>
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <h6 class="fw-medium">Add Dokumen Genba</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="card-body">
+                <div class="card-body">
                 <form id="form_add_genba" class="mb-2">
                     <div class="row mb-3">
                         <div class="col-sm-6">
@@ -144,6 +151,4 @@
             </div>
         </div>
     </div>
-</div>
-</div>
 </main>
