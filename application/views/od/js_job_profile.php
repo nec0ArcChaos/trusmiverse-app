@@ -73,7 +73,7 @@
         $('#company_id').on('change', function() {
             let id = $(this).val();
             $.ajax({
-                url: '<?php echo base_url() ?>job_profile/get_departments/' + id,
+                url: '<?php echo base_url() ?>od_job_profile/get_departments/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -92,7 +92,7 @@
 
             let id = $(this).val();
             $.ajax({
-                url: '<?php echo base_url() ?>job_profile/get_designations/' + id,
+                url: '<?php echo base_url() ?>od_job_profile/get_designations/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -156,8 +156,8 @@
     // function get_no_doc(company_id, department_id) {
     function get_no_doc(doc_type_id, div_id, company_id, department_id) {
         $.ajax({
-            // url: '<?php echo base_url() ?>job_profile/get_no_doc/' + doc_type_id + '/' + div_id + '/' + company_id + '/' + department_id,
-            url: '<?php echo base_url() ?>job_profile/get_no_doc/',
+            // url: '<?php echo base_url() ?>od_job_profile/get_no_doc/' + doc_type_id + '/' + div_id + '/' + company_id + '/' + department_id,
+            url: '<?php echo base_url() ?>od_job_profile/get_no_doc/',
             type: 'POST',
             data: {
                 doc_type_id: doc_type_id,
@@ -257,7 +257,7 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '<?php echo base_url() ?>job_profile/insert_job_profile',
+                        url: '<?php echo base_url() ?>od_job_profile/insert_job_profile',
                         type: 'POST',
                         data: form.serialize(),
                         'dataType': 'JSON',
@@ -301,14 +301,14 @@
                 $('.dt-buttons > .btn').addClass('btn btn-sm btn-info btn-sm');
             },
             "ajax": {
-                'url': '<?= base_url("job_profile/data_jp/") ?>' + start + '/' + end + '/' + sel_dept,
+                'url': '<?= base_url("od_job_profile/data_jp/") ?>' + start + '/' + end + '/' + sel_dept,
                 'type': 'GET',
                 'dataType': 'json',
             },
             "columns": [{
                     'data': 'no_jp',
                     render: function(data, type, row, meta) {
-                        let print = `<?= base_url('job_profile/print_/') ?>` + data + '/' + row.level_sto;
+                        let print = `<?= base_url('od_job_profile/print_/') ?>` + data + '/' + row.level_sto;
 
                         if ("<?php echo $this->session->userdata('user_id') ?>" == 2774 || "<?php echo $this->session->userdata('user_id') ?>" == 2843 || "<?php echo $this->session->userdata('user_id') ?>" == 2903 || "<?php echo $this->session->userdata('user_id') ?>" == 1) {
                             return `  <a href="javascript:void(0);" onclick="delete_jp('${data}')" class="btn btn-danger shadow btn-xs sharp">
@@ -430,7 +430,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '<?php echo base_url() ?>job_profile/delete_jp',
+                    url: '<?php echo base_url() ?>od_job_profile/delete_jp',
                     type: 'POST',
                     data: {
                         'no_jp': no_jp
@@ -458,7 +458,7 @@
         $('#no_jp_rv').val(no_jp);
         $('#label_review').text(no_jp);
         $.ajax({
-            url: '<?php echo base_url() ?>job_profile/get_jp',
+            url: '<?php echo base_url() ?>od_job_profile/get_jp',
             type: 'POST',
             data: {
                 'no_jp': no_jp
@@ -497,7 +497,7 @@
                 // footer: true
             }],
             "ajax": {
-                'url': '<?= base_url("job_profile/get_review/") ?>' + no_jp,
+                'url': '<?= base_url("od_job_profile/get_review/") ?>' + no_jp,
                 'type': 'GET',
                 'dataType': 'json',
             },
@@ -608,7 +608,7 @@
 
     function get_pic(id) {
         $.ajax({
-            url: '<?php echo base_url() ?>job_profile/get_pic/' + id,
+            url: '<?php echo base_url() ?>od_job_profile/get_pic/' + id,
             type: 'GET',
             'dataType': 'JSON',
             success: function(data) {
@@ -630,7 +630,7 @@
         $('#modal_add_berkas').modal('show');
         aktifkan_ckeditor();
         $.ajax({
-            url: '<?php echo base_url() ?>job_profile/get_jp',
+            url: '<?php echo base_url() ?>od_job_profile/get_jp',
             type: 'POST',
             data: {
                 'no_jp': no_jp
@@ -827,7 +827,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '<?php echo base_url() ?>job_profile/update_job_profile',
+                    url: '<?php echo base_url() ?>od_job_profile/update_job_profile',
                     type: 'POST',
                     // data: $('#form_add_berkas').serialize(),
                     data: {
@@ -930,7 +930,7 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '<?php echo base_url() ?>job_profile/add_responsibility',
+                        url: '<?php echo base_url() ?>od_job_profile/add_responsibility',
                         type: 'POST',
                         // data: $('#form_add_berkas').serialize(),
                         data: {
@@ -975,7 +975,7 @@
             //     footer: true
             // }],
             "ajax": {
-                'url': '<?= base_url("job_profile/get_job_task/") ?>' + no_jp,
+                'url': '<?= base_url("od_job_profile/get_job_task/") ?>' + no_jp,
                 'type': 'GET',
                 'dataType': 'json',
             },
@@ -1019,7 +1019,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '<?php echo base_url() ?>job_profile/delete_job_task',
+                    url: '<?php echo base_url() ?>od_job_profile/delete_job_task',
                     type: 'POST',
                     data: {
                         'id': id
@@ -1109,7 +1109,7 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '<?php echo base_url() ?>job_profile/add_kpi',
+                        url: '<?php echo base_url() ?>od_job_profile/add_kpi',
                         type: 'POST',
                         // data: $('#form_add_berkas').serialize(),
                         data: {
@@ -1154,7 +1154,7 @@
             //     footer: true
             // }],
             "ajax": {
-                'url': '<?= base_url("job_profile/get_kpi/") ?>' + no_jp,
+                'url': '<?= base_url("od_job_profile/get_kpi/") ?>' + no_jp,
                 'type': 'GET',
                 'dataType': 'json',
             },
@@ -1198,7 +1198,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '<?php echo base_url() ?>job_profile/delete_kpi',
+                    url: '<?php echo base_url() ?>od_job_profile/delete_kpi',
                     type: 'POST',
                     data: {
                         'id': id
@@ -1288,7 +1288,7 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '<?php echo base_url() ?>job_profile/add_internal',
+                        url: '<?php echo base_url() ?>od_job_profile/add_internal',
                         type: 'POST',
                         // data: $('#form_add_berkas').serialize(),
                         data: {
@@ -1333,7 +1333,7 @@
             //     footer: true
             // }],
             "ajax": {
-                'url': '<?= base_url("job_profile/get_internal/") ?>' + no_jp,
+                'url': '<?= base_url("od_job_profile/get_internal/") ?>' + no_jp,
                 'type': 'GET',
                 'dataType': 'json',
             },
@@ -1377,7 +1377,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '<?php echo base_url() ?>job_profile/delete_internal',
+                    url: '<?php echo base_url() ?>od_job_profile/delete_internal',
                     type: 'POST',
                     data: {
                         'id': id
@@ -1467,7 +1467,7 @@
             }).then((result) => {
                 if (result.value) {
                     $.ajax({
-                        url: '<?php echo base_url() ?>job_profile/add_external',
+                        url: '<?php echo base_url() ?>od_job_profile/add_external',
                         type: 'POST',
                         // data: $('#form_add_berkas').serialize(),
                         data: {
@@ -1512,7 +1512,7 @@
             //     footer: true
             // }],
             "ajax": {
-                'url': '<?= base_url("job_profile/get_external/") ?>' + no_jp,
+                'url': '<?= base_url("od_job_profile/get_external/") ?>' + no_jp,
                 'type': 'GET',
                 'dataType': 'json',
             },
@@ -1556,7 +1556,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: '<?php echo base_url() ?>job_profile/delete_external',
+                    url: '<?php echo base_url() ?>od_job_profile/delete_external',
                     type: 'POST',
                     data: {
                         'id': id
@@ -1665,7 +1665,7 @@
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('job_profile/get_no_doc'); ?>",
+                url: "<?= base_url('od_job_profile/get_no_doc'); ?>",
                 data: {
                     doc_type_id: doc_type,
                     div_id: division,
@@ -1689,7 +1689,7 @@
         // console.log('ada perubahan com');
 
         $.ajax({
-            url: "<?php echo site_url('sop/get_departments'); ?>",
+            url: "<?php echo site_url('od_sop/get_departments'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -1721,7 +1721,7 @@
         var id = $(this).val();
         console.log(id);
         $.ajax({
-            url: "<?php echo site_url('sop/get_designations'); ?>",
+            url: "<?php echo site_url('od_sop/get_designations'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -1757,7 +1757,7 @@
 
 
         var formdata = new FormData($('#form_edit_sop')[0]);
-        url = "<?php echo site_url('sop/update') ?>";
+        url = "<?php echo site_url('od_sop/update') ?>";
         var no_jp = $('[name="id_sop"]').val();
         var designation = $('#select_designation_edit option:selected').text();
         var no_doc = $('#nama_doc').val();

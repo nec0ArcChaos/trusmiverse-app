@@ -142,7 +142,7 @@
                                     <button class="btn btn-md btn-success" id="submit">Submit</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <a class="btn btn-md btn-warning" id="cancel" href="<?= base_url('dokumen_genba') ?>">Kembali</a>
+                                    <a class="btn btn-md btn-warning" id="cancel" href="<?= base_url('od_dokumen_genba') ?>">Kembali</a>
                                 </div>
                             </div>
                         </div>

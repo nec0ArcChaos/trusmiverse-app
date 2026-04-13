@@ -18,7 +18,7 @@
 			id = $(this).val();
 
 			$.ajax({
-				url: '<?php echo base_url() ?>designation/get_department/' + id,
+				url: '<?php echo base_url() ?>od_designation/get_department/' + id,
 				dataType: 'html',
 				success: function(data) {
 					$('#department_id').empty().append(data);
@@ -26,7 +26,7 @@
 			});
 
 			$.ajax({
-				url: '<?php echo base_url() ?>designation/get_designation/0',
+				url: '<?php echo base_url() ?>od_designation/get_designation/0',
 				dataType: 'html',
 				success: function(data) {
 					$('#report_to').empty().append(data);
@@ -53,7 +53,7 @@
 				report_to.select2('open');
 			} else {
 				$.ajax({
-					url: '<?php echo base_url() ?>designation/add_designation',
+					url: '<?php echo base_url() ?>od_designation/add_designation',
 					type: 'POST',
 					dataType: 'json',
 					data: $('#form_designation').serialize(),
@@ -78,7 +78,7 @@
 			report_to = $('#report_to');
 
 			$.ajax({
-				url: '<?php echo base_url() ?>designation/update_designation',
+				url: '<?php echo base_url() ?>od_designation/update_designation',
 				type: 'POST',
 				dataType: 'json',
 				data: $('#form_designation').serialize(),
@@ -104,14 +104,14 @@
 			$('#designation_name').val($(this).data('designation_name'));
 			$('#company_id').val($(this).data('company_id')).trigger('change');
 			$.ajax({
-				url: '<?php echo base_url() ?>designation/get_department/' + $(this).data('company_id') + '/' + $(this).data('department_id'),
+				url: '<?php echo base_url() ?>od_designation/get_department/' + $(this).data('company_id') + '/' + $(this).data('department_id'),
 				dataType: 'html',
 				success: function(data) {
 					$('#department_id').empty().append(data);
 				}
 			});
 			$.ajax({
-				url: '<?php echo base_url() ?>designation/get_designation/0/' + $(this).data('report_to'),
+				url: '<?php echo base_url() ?>od_designation/get_designation/0/' + $(this).data('report_to'),
 				dataType: 'html',
 				success: function(data) {
 					$('#report_to').empty().append(data);
@@ -130,7 +130,7 @@
 				.then((willDelete) => {
 					if (willDelete) {
 						$.ajax({
-							url: '<?php echo base_url() ?>designation/delete_designation',
+							url: '<?php echo base_url() ?>od_designation/delete_designation',
 							type: 'POST',
 							dataType: 'json',
 							data: {
@@ -166,7 +166,7 @@
 				$('.dt-buttons > .btn').addClass('btn btn-sm btn-info btn-sm');
 			},
 			"ajax": {
-				'url': '<?php echo base_url() ?>designation/list_designation',
+				'url': '<?php echo base_url() ?>od_designation/list_designation',
 				'type': 'POST',
 				'dataType': 'json',
 			},

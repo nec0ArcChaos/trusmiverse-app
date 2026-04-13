@@ -22,7 +22,7 @@
 			id = $(this).val();
 
 			$.ajax({
-				url: '<?php echo base_url() ?>department/get_location/' + id,
+				url: '<?php echo base_url() ?>od_department/get_location/' + id,
 				dataType: 'html',
 				success: function(data) {
 					$('#location_id').empty().append(data);
@@ -50,7 +50,7 @@
 				breaked.select2('open');
 			} else {
 				$.ajax({
-					url: '<?php echo base_url() ?>department/add_department',
+					url: '<?php echo base_url() ?>od_department/add_department',
 					type: 'POST',
 					dataType: 'json',
 					data: $('#form_department').serialize(),
@@ -78,7 +78,7 @@
 			breaked = $('#break');
 
 			$.ajax({
-				url: '<?php echo base_url() ?>department/update_department',
+				url: '<?php echo base_url() ?>od_department/update_department',
 				type: 'POST',
 				dataType: 'json',
 				data: $('#form_department').serialize(),
@@ -109,7 +109,7 @@
 			$("#break").val($(this).data('break')).trigger('change');
 			$('#department_kode').val($(this).data('department_kode'));
 			$.ajax({
-				url: '<?php echo base_url() ?>department/get_location/' + $(this).data('company_id') + '/' + $(this).data('location_id'),
+				url: '<?php echo base_url() ?>od_department/get_location/' + $(this).data('company_id') + '/' + $(this).data('location_id'),
 				dataType: 'html',
 				success: function(data) {
 					$('#location_id').empty().append(data);
@@ -128,7 +128,7 @@
 				.then((willDelete) => {
 					if (willDelete) {
 						$.ajax({
-							url: '<?php echo base_url() ?>department/delete_department',
+							url: '<?php echo base_url() ?>od_department/delete_department',
 							type: 'POST',
 							dataType: 'json',
 							data: {
@@ -154,7 +154,7 @@
 			"destroy": true,
 			"pageLength": 5,
 			"ajax": {
-				'url': '<?php echo base_url() ?>department/list_department',
+				'url': '<?php echo base_url() ?>od_department/list_department',
 				'type': 'POST',
 				'dataType': 'json',
 			},

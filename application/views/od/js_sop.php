@@ -31,7 +31,7 @@
         $('#company_id').on('change', function() {
             let id = $(this).val();
             $.ajax({
-                url: '<?php echo base_url() ?>job_profile/get_departments/' + id,
+                url: '<?php echo base_url() ?>od_job_profile/get_departments/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -142,7 +142,7 @@
             }
         });
 
-        url = "<?= site_url('sop/data_sop') ?>";
+        url = "<?= site_url('od_sop/data_sop') ?>";
         $('#table_sop').DataTable({
             "destroy": true,
             "pageLength": 10,
@@ -534,7 +534,7 @@
                 // footer: true
             }],
             "ajax": {
-                'url': '<?= base_url("sop/get_review/") ?>' + id_sop,
+                'url': '<?= base_url("od_sop/get_review/") ?>' + id_sop,
                 'type': 'GET',
                 'dataType': 'json',
             },
@@ -594,7 +594,7 @@
         var id = $(this).val();
 
         $.ajax({
-            url: "<?php echo site_url('sop/get_departments'); ?>",
+            url: "<?php echo site_url('od_sop/get_departments'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -626,7 +626,7 @@
         var id = $(this).val();
         // console.log('select sing dept change ', id);
         $.ajax({
-            url: "<?php echo site_url('sop/get_designations'); ?>",
+            url: "<?php echo site_url('od_sop/get_designations'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -664,7 +664,7 @@
         var selectedIds = $(this).val();
         // console.log('select multi dept change ', selectedIds);
         $.ajax({
-            url: "<?php echo site_url('sop/get_designations_multi_dept'); ?>",
+            url: "<?php echo site_url('od_sop/get_designations_multi_dept'); ?>",
             method: "POST",
             data: {
                 ids: selectedIds
@@ -702,7 +702,7 @@
         var selectedIds = $(this).val();
         // console.log('select multi dept change ', selectedIds);
         $.ajax({
-            url: "<?php echo site_url('sop/get_designations_multi_dept'); ?>",
+            url: "<?php echo site_url('od_sop/get_designations_multi_dept'); ?>",
             method: "POST",
             data: {
                 ids: selectedIds
@@ -737,7 +737,7 @@
         var id = $(this).val();
         // console.log(id);
         $.ajax({
-            url: "<?php echo site_url('sop/get_designations'); ?>",
+            url: "<?php echo site_url('od_sop/get_designations'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -906,7 +906,7 @@
             // });
             // return;
 
-            url = "<?php echo site_url('sop/insert') ?>";
+            url = "<?php echo site_url('od_sop/insert') ?>";
 
             var ajax = new XMLHttpRequest();
             ajax.upload.addEventListener("progress", progressUpload, false);
@@ -945,7 +945,7 @@
         id = $(this).data('id_sop');
 
         $.ajax({
-            url: "<?= site_url('sop/delete_sop') ?>",
+            url: "<?= site_url('od_sop/delete_sop') ?>",
             type: 'POST',
             data: {
                 id: id
@@ -968,7 +968,7 @@
         // console.log('ada perubahan com');
 
         $.ajax({
-            url: "<?php echo site_url('sop/get_departments'); ?>",
+            url: "<?php echo site_url('od_sop/get_departments'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -1000,7 +1000,7 @@
         // console.log('sel comp edit triger change, id: ', id);
 
         $.ajax({
-            url: "<?php echo site_url('sop/get_departments'); ?>",
+            url: "<?php echo site_url('od_sop/get_departments'); ?>",
             method: "POST",
             data: {
                 id: id
@@ -1034,7 +1034,7 @@
 
         if (type_department == 1) {
             $.ajax({
-                url: "<?php echo site_url('sop/get_designations'); ?>",
+                url: "<?php echo site_url('od_sop/get_designations'); ?>",
                 method: "POST",
                 data: {
                     id: id
@@ -1083,7 +1083,7 @@
 
         if (type_department == '2') {
             $.ajax({
-                url: "<?php echo site_url('sop/get_designations_multi_dept'); ?>",
+                url: "<?php echo site_url('od_sop/get_designations_multi_dept'); ?>",
                 method: "POST",
                 data: {
                     ids: department
@@ -1103,7 +1103,7 @@
             });
         } else if (type_department == '1') {
             $.ajax({
-                url: "<?php echo site_url('sop/get_designations'); ?>",
+                url: "<?php echo site_url('od_sop/get_designations'); ?>",
                 method: "POST",
                 data: {
                     id: department
@@ -1241,7 +1241,7 @@
                 fd.append('jadwal_diskusi', jadwal_diskusi);
 
                 $.ajax({
-                    url: '<?= base_url('sop/save_request'); ?>',
+                    url: '<?= base_url('od_sop/save_request'); ?>',
                     type: 'post',
                     data: fd,
                     contentType: false,
@@ -1313,7 +1313,7 @@
                 fd.append('authority', authority);
 
                 $.ajax({
-                    url: '<?= base_url('sop/save_request'); ?>',
+                    url: '<?= base_url('od_sop/save_request'); ?>',
                     type: 'post',
                     data: fd,
                     contentType: false,
@@ -1364,7 +1364,7 @@
                 fd.append('jadwal_diskusi', jadwal_diskusi);
 
                 $.ajax({
-                    url: '<?= base_url('sop/save_request'); ?>',
+                    url: '<?= base_url('od_sop/save_request'); ?>',
                     type: 'post',
                     data: fd,
                     contentType: false,
@@ -1463,7 +1463,7 @@
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('job_profile/get_no_doc'); ?>",
+                url: "<?= base_url('od_job_profile/get_no_doc'); ?>",
                 data: {
                     doc_type_id: doc_type,
                     div_id: division,
@@ -1511,7 +1511,7 @@
 
         if (containsAllFalse(validate) == true) {
             var formdata = new FormData($('#form_edit_sop')[0]);
-            url = "<?php echo site_url('sop/update') ?>";
+            url = "<?php echo site_url('od_sop/update') ?>";
             var no_jp = $('[name="id_sop"]').val();
             formdata.append('file', $('#file').val());
             formdata.append('word', $('#word').val());
@@ -1605,7 +1605,7 @@
             } else {
                 if ((i + 1) == total_spo) {
                     var formdata = new FormData($('#form_add_link')[0]);
-                    url = "<?php echo site_url('sop/add_link') ?>";
+                    url = "<?php echo site_url('od_sop/add_link') ?>";
 
                     var ajax = new XMLHttpRequest();
                     ajax.upload.addEventListener("progress", progressUpload, false);
@@ -1660,7 +1660,7 @@
 
         id_sop = $(this).data('id_sop');
 
-        url = "<?= site_url('sop/detail') ?>";
+        url = "<?= site_url('od_sop/detail') ?>";
         $('#t_detail').DataTable({
             'destroy': true,
             'lengthChange': false,
@@ -1702,7 +1702,7 @@
         idc = $(this).data('idc');
 
         $.ajax({
-            url: "<?= site_url('sop/delete_relasi') ?>",
+            url: "<?= site_url('od_sop/delete_relasi') ?>",
             type: 'POST',
             data: {
                 idp: idp,
@@ -1913,7 +1913,7 @@
             var formdata = new FormData($('#form_blast')[0]);
             // console.log(formdata);         
 
-            url = "<?php echo site_url('sop/blast') ?>";
+            url = "<?php echo site_url('od_sop/blast') ?>";
 
             var ajax = new XMLHttpRequest();
             ajax.open("POST", url, true);

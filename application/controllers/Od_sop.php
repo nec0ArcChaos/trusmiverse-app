@@ -1,17 +1,17 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Sop extends CI_Controller
+class Od_sop extends CI_Controller
 {
 
     function __construct()
     {
         parent::__construct();
         $this->load->helper("url");
-        $this->load->model('model_sop');
-        $this->load->model('model_designation');
+        $this->load->model('model_od_sop');
+        $this->load->model('model_od_designation');
         $this->load->library("session");
-        $this->load->model('model_review', 'review');
+        $this->load->model('model_od_review', 'review');
 
         if ($this->session->userdata('user_id') != "") {
         } else {
@@ -26,8 +26,8 @@ class Sop extends CI_Controller
         $data['js']        = "od/js_sop";
         $data['content']   = "od/index_sop";
 
-        $data['dd']        = $this->model_sop->getDd()->result();
-        $user = $this->model_sop->data_user($this->session->userdata('user_id'));
+        $data['dd']        = $this->model_od_sop->getDd()->result();
+        $user = $this->model_od_sop->data_user($this->session->userdata('user_id'));
 
         $data['user'] = [];
         foreach ($user as $items) {
@@ -38,8 +38,8 @@ class Sop extends CI_Controller
             ];
             $data['user'] = $value;
         }
-        $data['no_jp']    = $this->model_sop->no_jp();
-        $data['golongan'] = $this->model_sop->get_golongan_jp();
+        $data['no_jp']    = $this->model_od_sop->no_jp();
+        $data['golongan'] = $this->model_od_sop->get_golongan_jp();
 
         $data['companies'] = $this->db->query("SELECT company_id, name FROM xin_companies")->result();
         $data['employees'] = $this->db->query("SELECT REPLACE(REPLACE(REPLACE(IF(SUBSTR(xin_employees.contact_no, 1, 2) != '62', CONCAT('62', SUBSTR(xin_employees.contact_no, 2, LENGTH(xin_employees.contact_no))), xin_employees.contact_no), '-', ''), '+', ''), ' ', '') AS no_hp, TRIM(CONCAT(xin_employees.first_name, ' ', xin_employees.last_name)) AS employee_name FROM xin_employees WHERE is_Active = 1")->result();
@@ -49,7 +49,7 @@ class Sop extends CI_Controller
 
     function get_pic()
     {
-        $user = $this->model_sop->get_pic($this->input->post('id'));
+        $user = $this->model_od_sop->get_pic($this->input->post('id'));
         $data = [];
         foreach ($user as $items) {
             $value = [
@@ -119,7 +119,7 @@ class Sop extends CI_Controller
                 'penjelasan'     => $_POST['penjelasan'],
                 'jadwal_diskusi' => $_POST['jadwal_diskusi']
             );
-            $hasil = $this->model_sop->save_request($data);
+            $hasil = $this->model_od_sop->save_request($data);
             echo json_encode($hasil);
 
         } else if ($_POST['pilih_dokumen'] == 2) { // Job Profile
@@ -182,7 +182,7 @@ class Sop extends CI_Controller
                 'penjelasan'     => $_POST['penjelasan'],
                 'jadwal_diskusi' => $_POST['jadwal_diskusi']
             );
-            $hasil = $this->model_sop->save_request($data);
+            $hasil = $this->model_od_sop->save_request($data);
             echo json_encode($hasil);
         }
     }
@@ -205,46 +205,46 @@ class Sop extends CI_Controller
     function sub_divisi()
     {
         $id_divisi = $this->input->post('id', TRUE);
-        $data = $this->model_sop->getSubDivisi($id_divisi)->result();
+        $data = $this->model_od_sop->getSubDivisi($id_divisi)->result();
         echo json_encode($data);
     }
 
     function sub_sub_divisi()
     {
         $id_sub_divisi = $this->input->post('id', TRUE);
-        $data = $this->model_sop->getSubSubDivisi($id_sub_divisi)->result();
+        $data = $this->model_od_sop->getSubSubDivisi($id_sub_divisi)->result();
         echo json_encode($data);
     }
 
     function data_sop()
     {
-        $data = $this->model_sop->getSOP();
+        $data = $this->model_od_sop->getSOP();
         echo json_encode($data);
     }
 
     function get_sop_review()
     {
         $id_sop = $this->input->post('id_sop');
-        $data = $this->model_sop->get_sop_review($id_sop);
+        $data = $this->model_od_sop->get_sop_review($id_sop);
         echo json_encode($data);
     }
 
     function insert()
     {
-        $data = $this->model_sop->insert();
+        $data = $this->model_od_sop->insert();
         echo json_encode($data);
     }
 
     function update()
     {
-        $data = $this->model_sop->update();
+        $data = $this->model_od_sop->update();
         echo json_encode($data);
     }
 
     function detail()
     {
         $id_sop = $_POST['id_sop'];
-        $data = $this->model_sop->getDetail($id_sop);
+        $data = $this->model_od_sop->getDetail($id_sop);
         echo json_encode($data);
     }
 
@@ -287,13 +287,13 @@ class Sop extends CI_Controller
 
     function menu()
     {
-        $d = $this->model_sop->d();
+        $d = $this->model_od_sop->d();
         foreach ($d as $d) {
             echo $d->nama_divisi . "<br>";
-            $sd = $this->model_sop->sd($d->id_divisi);
+            $sd = $this->model_od_sop->sd($d->id_divisi);
             foreach ($sd as $sd) {
                 echo "&emsp;&emsp;" . $sd->nama_sub_divisi . "<br>";
-                $ssd = $this->model_sop->ssd($sd->id_sub_divisi);
+                $ssd = $this->model_od_sop->ssd($sd->id_sub_divisi);
                 foreach ($ssd as $ssd) {
                     echo "&emsp;&emsp;&emsp;&emsp;" . $ssd->nama_sub_sub_divisi . "<br>";
                 }

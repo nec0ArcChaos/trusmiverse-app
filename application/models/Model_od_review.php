@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Model_review extends CI_Model
+class Model_od_review extends CI_Model
 {
     public function __construct()
 	{

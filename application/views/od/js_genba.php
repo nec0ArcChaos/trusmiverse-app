@@ -59,7 +59,7 @@
                 "dataType": 'json',
                 "type": "POST",
                 "data": { start: start, end: end },
-                "url": `<?= base_url("dokumen_genba/listGenba") ?>`,
+                "url": `<?= base_url("od_dokumen_genba/listGenba") ?>`,
             },
             "columns": [
                 { 'data': 'id_genba' },

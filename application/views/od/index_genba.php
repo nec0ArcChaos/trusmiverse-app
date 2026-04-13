@@ -29,7 +29,7 @@
                                     </form>
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn btn-theme" href="<?= base_url('dokumen_genba/add_genba') ?>">
+                                    <a class="btn btn-theme" href="<?= base_url('od_dokumen_genba/add_genba') ?>">
                                         <i class="bi bi-plus-circle"></i> Add Data
                                     </a>
                                 </div>

@@ -7,7 +7,17 @@
       "Bash(sed -i \"s|assets/old/libs/datatables/js/jszip.min.js|assets/data-table/js/jszip.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
       "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons/js/dataTables.buttons.min.js|assets/datatables.net-buttons/js/dataTables.buttons.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
       "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js|assets/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
-      "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons/js/buttons.html5.min.js|assets/datatables.net-buttons/js/buttons.html5.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)"
+      "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons/js/buttons.html5.min.js|assets/datatables.net-buttons/js/buttons.html5.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
+      "Bash(sed -i \"s|department/get_location|od_department/get_location|g\" js_department.php)",
+      "Bash(sed -i \"s|department/add_department|od_department/add_department|g\" js_department.php)",
+      "Bash(sed -i \"s|department/update_department|od_department/update_department|g\" js_department.php)",
+      "Bash(sed -i \"s|department/delete_department|od_department/delete_department|g\" js_department.php)",
+      "Bash(sed -i \"s|department/list_department|od_department/list_department|g\" js_department.php)",
+      "Bash(sed -i \"s|'sop/|'od_sop/|g\" js_sop.php)",
+      "Bash(sed -i \"s|\\\\\"sop/|\\\\\"od_sop/|g\" js_sop.php)",
+      "Bash(sed -i \"s|job_profile/get_departments|od_job_profile/get_departments|g\" js_sop.php)",
+      "Bash(sed -i \"s|job_profile/get_no_doc|od_job_profile/get_no_doc|g\" js_sop.php)",
+      "Bash(sed -i \"s|job_profile/|od_job_profile/|g\" js_job_profile.php)"
     ]
   }
 }

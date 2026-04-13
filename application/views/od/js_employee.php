@@ -31,7 +31,7 @@
 				$('.dt-buttons > .btn').addClass('btn btn-sm btn-info btn-sm');
 			},
 			"ajax": {
-				'url': '<?php echo base_url() ?>employee/list_employees',
+				'url': '<?php echo base_url() ?>od_employee/list_employees',
 				'type': 'POST',
 				'dataType': 'json',
 			},
@@ -79,7 +79,7 @@
 				$('#report_to').select2('open');
 			} else {
 				$.ajax({
-					url: '<?php echo base_url() ?>employee/update_report_to',
+					url: '<?php echo base_url() ?>od_employee/update_report_to',
 					type: 'POST',
 					dataType: 'json',
 					data: $('#form_report_to').serialize(),

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Model_sop extends CI_Model
+class Model_od_sop extends CI_Model
 {
 
     function d()

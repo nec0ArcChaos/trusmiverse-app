@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Employee extends CI_Controller
+class Od_employee extends CI_Controller
 {
 
 	function __construct()
@@ -9,7 +9,7 @@ class Employee extends CI_Controller
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
-		$this->load->model('model_employee', 'model');
+		$this->load->model('model_od_employee', 'model');
 		if ($this->session->userdata('user_id') != "") {
 
 		} else {

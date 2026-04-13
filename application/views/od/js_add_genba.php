@@ -27,7 +27,7 @@
         $('#company_id').change(function(e) {
             let id = $(this).val();
             $.ajax({
-                url: '<?php echo base_url() ?>dokumen_genba/getDepartemen/' + id,
+                url: '<?php echo base_url() ?>od_dokumen_genba/getDepartemen/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -43,7 +43,7 @@
         $('#department_id').change(function(e) {
             let id = $(this).val();
             $.ajax({
-                url: '<?php echo base_url() ?>dokumen_genba/getNarasumber/' + id,
+                url: '<?php echo base_url() ?>od_dokumen_genba/getNarasumber/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -56,7 +56,7 @@
             });
 
             $.ajax({
-                url: '<?php echo base_url() ?>dokumen_genba/getDokumen/' + id,
+                url: '<?php echo base_url() ?>od_dokumen_genba/getDokumen/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -135,7 +135,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `<?= base_url('dokumen_genba/simpanGenba') ?>`,
+                        url: `<?= base_url('od_dokumen_genba/simpanGenba') ?>`,
                         type: 'POST',
                         data: formdata,
                         processData: false,

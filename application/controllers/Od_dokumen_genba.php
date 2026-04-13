@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Dokumen_genba extends CI_Controller
+class Od_dokumen_genba extends CI_Controller
 {
 
 	function __construct()
@@ -9,7 +9,7 @@ class Dokumen_genba extends CI_Controller
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
-		$this->load->model('model_dokumen_genba', 'model');
+		$this->load->model('model_od_dokumen_genba', 'model');
 		if ($this->session->userdata('user_id') != "") {
 		} else {
 			redirect('login', 'refresh');

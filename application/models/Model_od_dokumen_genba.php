@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Model_dokumen_genba extends CI_Model
+class Model_od_dokumen_genba extends CI_Model
 {
 
 	public function __construct()
