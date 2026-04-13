@@ -22,9 +22,9 @@ class Sop extends CI_Controller
     function index()
     {
         $data['pageTitle'] = "INVENTORY";
-        $data['css']       = "sop/css";
-        $data['js']        = "sop/js";
-        $data['content']   = "sop/index";
+        $data['css']       = "od/css_sop";
+        $data['js']        = "od/js_sop";
+        $data['content']   = "od/index_sop";
 
         $data['dd']        = $this->model_sop->getDd()->result();
         $user = $this->model_sop->data_user($this->session->userdata('user_id'));

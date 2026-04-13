@@ -20,9 +20,9 @@ class Job_profile extends CI_Controller
 	function index()
 	{
 		$data['pageTitle'] 	= "Job Profile";
-		$data['css'] 		= "job_profile/css";
-		$data['js'] 		= "job_profile/js";
-		$data['content'] 	= "job_profile/index";
+		$data['css'] 		= "od/css_job_profile";
+		$data['js'] 		= "od/js_job_profile";
+		$data['content'] 	= "od/index_job_profile";
 
 		$user = $this->model->data_user($this->session->userdata('user_id'));
 
@@ -51,7 +51,7 @@ class Job_profile extends CI_Controller
 		$data['kpi']      = $this->model->get_kpi($no_jp);
 		$data['internal'] = $this->model->get_internal($no_jp);
 		$data['external'] = $this->model->get_external($no_jp);
-		$this->load->view('job_profile/print_', $data);
+		$this->load->view('od/print_job_profile', $data);
 	}
 
 	public function hashApplicantId($applicant_id)

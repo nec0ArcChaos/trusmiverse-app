@@ -19,9 +19,9 @@ class Dokumen_genba extends CI_Controller
 	function index()
 	{
 		$data['pageTitle'] 	= "Dokumen Genba";
-		$data['css'] 		= "dokumen_genba/css";
-		$data['js'] 		= "dokumen_genba/js";
-		$data['content'] 	= "dokumen_genba/index";
+		$data['css'] 		= "od/css_genba";
+		$data['js'] 		= "od/js_genba";
+		$data['content'] 	= "od/index_genba";
 
 		$this->load->view('layout/main', $data);
 	}
@@ -44,9 +44,9 @@ class Dokumen_genba extends CI_Controller
 	function add_genba()
 	{
 		$data['pageTitle'] = 'Dokumen Genba';
-		$data['css'] = "dokumen_genba/add_css";
-		$data['js'] = "dokumen_genba/js_add";
-		$data['content'] = "dokumen_genba/add_genba";
+		$data['css'] = "od/add_css_genba";
+		$data['js'] = "od/js_add_genba";
+		$data['content'] = "od/add_genba";
 		$data['pic'] = $this->model->getPic();
 		$data['company'] = $this->model->getCompany();
 		$data['rekomendasi'] = $this->model->getRekomendasi();

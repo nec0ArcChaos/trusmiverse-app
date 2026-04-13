@@ -20,9 +20,9 @@ class Department extends CI_Controller
 	function index()
 	{
 		$data['pageTitle'] 	= "Department";
-		$data['css'] 		= "department/css";
-		$data['js'] 		= "department/js";
-		$data['content'] 	= "department/index";
+		$data['css'] 		= "od/css_department";
+		$data['js'] 		= "od/js_department";
+		$data['content'] 	= "od/index_department";
 
 		// $user_id  = $this->session->userdata("user_id");
 

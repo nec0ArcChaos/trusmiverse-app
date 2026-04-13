@@ -20,9 +20,9 @@ class Employee extends CI_Controller
 	function index()
 	{
 		$data['pageTitle'] 	= "Report To";
-		$data['css'] 		= "employee/css";
-		$data['js'] 		= "employee/js";
-		$data['content'] 	= "employee/index";
+		$data['css'] 		= "od/css_employee";
+		$data['js'] 		= "od/js_employee";
+		$data['content'] 	= "od/index_employee";
 		$data['emp'] = $this->model->list_employees()->result();
 
 		$this->load->view('layout/main', $data);

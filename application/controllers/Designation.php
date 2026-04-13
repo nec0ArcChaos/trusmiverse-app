@@ -20,9 +20,9 @@ class Designation extends CI_Controller
 	function index()
 	{
 		$data['pageTitle'] 	= "Designation";
-		$data['css'] 		= "designation/css";
-		$data['js'] 		= "designation/js";
-		$data['content'] 	= "designation/index";
+		$data['css'] 		= "od/css_designation";
+		$data['js'] 		= "od/js_designation";
+		$data['content'] 	= "od/index_designation";
 
 		$data['companies'] = $this->model->get_companies()->result();
 
