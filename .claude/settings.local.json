@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/c/xampp/mysql/bin/mysql.exe -h 192.168.225.175 -P 1776 -u app_2323 -p']T4@w}w_6HNqqT^6' hris -e \"SELECT menu_id, menu_nm, menu_url, no_urut FROM trusmi_navigation WHERE level=1 ORDER BY no_urut;\")",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -h 192.168.225.175 -P 1776 -u app_2323 '-p]T4@w}w_6HNqqT^6' hris -e ':*)",
+      "Bash(sed -i \"s|assets/vendor/datatables/js/jquery.dataTables.min.js|assets/js/jquery.dataTables.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
+      "Bash(sed -i \"s|assets/old/libs/datatables/js/jszip.min.js|assets/data-table/js/jszip.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
+      "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons/js/dataTables.buttons.min.js|assets/datatables.net-buttons/js/dataTables.buttons.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
+      "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js|assets/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)",
+      "Bash(sed -i \"s|assets/old/libs/datatables.net-buttons/js/buttons.html5.min.js|assets/datatables.net-buttons/js/buttons.html5.min.js|g\" /c/xampp/htdocs/trusmiverse-app/application/views/sop/js.php)"
+    ]
+  }
+}

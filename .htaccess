@@ -1,0 +1,21 @@
+RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# RewriteCond %{HTTP_HOST} ^trusmiverse\.com$ [NC,OR]
+#RewriteCond %{HTTPS} !=on
+#RewriteCond %{HTTPS} off
+#RewriteCond %{SERVER_PORT} 80
+#RewriteCond %{REQUEST_URI} apps
+#RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^(.*)$ https://%index.php/$1 [R,L]
+#RewriteRule ^(.*)$ index.php/$1 [L,R=301L]
+RewriteRule ^(.*)$ index.php/$1 [L]
+#RewriteCond %{REQUEST_URI} !^/index.php$
+#RewriteRule ^(.*)$ /index.php [L]
+
+
+
+#Redirect /apps https://trusmiverse.com

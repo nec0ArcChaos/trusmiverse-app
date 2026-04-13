@@ -1,0 +1,581 @@
+<script>
+    // Master Data
+    const SYMPTOMS = [
+        { id: 'G1', name: 'Tugas yang diberikan perusahaan berlebihan', cfPakar: 1.0 },
+        //...
+    ];
+
+    const DIAGNOSES = [
+        { id: 'D1', name: 'Tidak Stres', description: 'Tidak menunjukkan tanda-tanda stres yang signifikan' },
+        { id: 'D2', name: 'Stres Rendah', description: 'Menunjukkan tanda-tanda stres ringan yang perlu diperhatikan' },
+        { id: 'D3', name: 'Stres Sedang', description: 'Menunjukkan tanda-tanda stres yang perlu ditangani secara serius' },
+        { id: 'D4', name: 'Stres Tinggi', description: 'Menunjukkan tanda-tanda stres parah yang memerlukan intervensi segera' }
+    ];
+
+    const SOLUTIONS = {
+        'D1': ['Tetap pertahankan keseimbangan kerja dan hidup yang sehat'],
+        'D2': [
+            'Lakukan teknik relaksasi seperti meditasi atau yoga',
+            'Atur waktu kerja yang lebih baik dan jangan lembur berlebihan',
+            'Cari dukungan dari rekan kerja atau atasan',
+            'Luangkan waktu untuk hobi dan aktivitas yang menyenangkan',
+            'Pastikan tidur cukup dan makan makanan bergizi'
+        ],
+        //...
+    };
+
+    const RULES = {
+        'D1': ['G7', 'G8', 'G11', 'G18', 'G19', 'G21', 'G24', 'G25', 'G27', 'G33', 'G36', 'G40', 'G41'],
+        'D2': ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G17', 'G18', 'G19', 'G20', 'G21', 'G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28', 'G29', 'G30', 'G31', 'G32', 'G33', 'G34', 'G35', 'G36', 'G37', 'G38', 'G39', 'G40', 'G41', 'G42', 'G43'],
+        'D3': ['G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G17', 'G18', 'G19', 'G20', 'G21', 'G22', 'G23', 'G24', 'G25', 'G26', 'G27', 'G28'],
+        'D4': ['G30', 'G39', 'G43']
+    };
+
+    const ANSWER_OPTIONS = [
+        { text: 'Pasti Tidak', value: -0.1 },
+        { text: 'Hampir Pasti Tidak', value: -0.8 },
+        { text: 'Kemungkinan Besar Tidak', value: -0.6 },
+        { text: 'Mungkin Tidak', value: -0.4 },
+        { text: 'Tidak Tahu', value: 0 },
+        { text: 'Mungkin', value: 0.4 },
+        { text: 'Kemungkinan Besar', value: 0.6 },
+        { text: 'Hampir Pasti', value: 0.8 },
+        { text: 'Pasti', value: 1.0 }
+    ];
+    // CF Calculation Functions
+    function calculateCFHE(cfPakar, cfUser) {
+        return cfPakar * cfUser;
+    }
+
+    function combineCF(cf1, cf2) {
+        if(cf1 > 0 && cf2 > 0){
+            cfCombined = cf1 + cf2 * (1 - cf1)
+        } else if (cf1 < 0 && cf2 < 0) {
+            cfCombined = cf1 + cf2 * (1 + cf1)
+        } else {
+            denom = (1 - Math.min(Math.abs(cf1), Math.abs(cf2)))
+            denom = (denom == 0 ? 1 : denom) //menghindari divide by 0
+            cfCombined = cf1 + cf2 / denom
+        }
+        return cfCombined;
+    }
+
+    function calculateCombinedCF(symptoms) {
+        if (symptoms.length === 0) return 0;
+        
+        const cfResults = symptoms.map(s => calculateCFHE(s.cfPakar, s.cfUser));
+        let cfCombined = cfResults[0];
+        
+        for (let i = 1; i < cfResults.length; i++) {
+            cfCombined = combineCF(cfCombined, cfResults[i]);
+        }
+        
+        return cfCombined;
+    }
+
+    function diagnose() {
+        const diagnosisResults = [];
+        
+        for (const [diagnosisId, requiredSymptoms] of Object.entries(RULES)) {
+            const ruleSymptoms = requiredSymptoms
+                .map(symptomId => {
+                    const symptomData = SYMPTOMS.find(s => s.id === symptomId);
+                    const userAnswer = userAnswers[symptomId];
+                    
+                    if (symptomData && userAnswer !== undefined) {
+                        return {
+                            gejalaid: symptomId,
+                            cfPakar: symptomData.cfPakar,
+                            cfUser: userAnswer
+                        };
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+            
+            const cfCombined = calculateCombinedCF(ruleSymptoms);
+            const percentage = Math.max(0, Math.min(100, cfCombined * 100));
+            
+            diagnosisResults.push({
+                diagnosisId,
+                diagnosisName: DIAGNOSES.find(d => d.id === diagnosisId)?.name || diagnosisId,
+                cfCombined,
+                percentage
+            });
+        }
+        
+        diagnosisResults.sort((a, b) => b.cfCombined - a.cfCombined);
+        
+        const bestDiagnosis = diagnosisResults[0];
+        
+        return {
+            diagnosis: bestDiagnosis.diagnosisId,
+            diagnosisName: bestDiagnosis.diagnosisName,
+            percentage: bestDiagnosis.percentage,
+            allResults: diagnosisResults,
+            cfCombined: bestDiagnosis.cfCombined,
+            timestamp: Date.now(),
+            answers: userAnswers
+        };
+    }
+
+    // State
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let currentResult = null;
+
+    // Navigation
+    function navigateTo(pageId) {
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+        document.getElementById(pageId).classList.add('active');
+        
+        // Initialize page if needed
+        if (pageId === 'questionnaire-page') {
+            initQuestionnaire();
+        } else if (pageId === 'history-page') {
+            loadHistory();
+        }
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+    }
+
+    // Questionnaire Functions
+    function initQuestionnaire() {
+        currentQuestionIndex = 0;
+        userAnswers = {};
+        updateQuestion();
+    }
+
+    function updateQuestion() {
+        const symptom = SYMPTOMS[currentQuestionIndex];
+        document.getElementById('question-text').textContent = symptom.name;
+        document.getElementById('current-question-num').textContent = currentQuestionIndex + 1;
+        document.getElementById('total-questions').textContent = SYMPTOMS.length;
+        
+        const progress = ((currentQuestionIndex + 1) / SYMPTOMS.length) * 100;
+        document.getElementById('progress-percentage').textContent = Math.round(progress) + '%';
+        document.getElementById('progress-bar').style.width = progress + '%';
+        
+        // Update answered count
+        document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+        
+        // Render answer options
+        const answerOptionsDiv = document.getElementById('answer-options');
+        answerOptionsDiv.innerHTML = '';
+        
+        ANSWER_OPTIONS.forEach(option => {
+            const isSelected = userAnswers[symptom.id] === option.value;
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'flex items-center space-x-2';
+            optionDiv.innerHTML = `
+                <input type="radio" id="${option.text}" name="answer" value="${option.value}" 
+                        ${isSelected ? 'checked' : ''} 
+                        onchange="selectAnswer('${symptom.id}', ${option.value})"
+                        class="w-4 h-4 text-blue-600">
+                <label for="${option.text}" class="flex-1 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-gray-50">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">${option.text}</span>
+                        <span class="text-sm text-gray-500">${option.value >= 0 ? '+' : ''}${(option.value * 100).toFixed(0)}%</span>
+                    </div>
+                </label>
+            `;
+            answerOptionsDiv.appendChild(optionDiv);
+        });
+        
+        // Update button states
+        document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+        const isLastQuestion = currentQuestionIndex === SYMPTOMS.length - 1;
+        document.getElementById('next-btn-text').textContent = isLastQuestion ? 'Selesaikan' : 'Selanjutnya';
+    }
+
+    function selectAnswer(symptomId, value) {
+        userAnswers[symptomId] = value;
+        document.getElementById('answered-count').textContent = Object.keys(userAnswers).length;
+    }
+
+    function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            updateQuestion();
+        }
+    }
+
+    function nextQuestion() {
+        const symptom = SYMPTOMS[currentQuestionIndex];
+        if (userAnswers[symptom.id] === undefined) {
+            alert('Silakan pilih jawaban terlebih dahulu');
+            return;
+        }
+        
+        if (currentQuestionIndex < SYMPTOMS.length - 1) {
+            currentQuestionIndex++;
+            updateQuestion();
+        } else {
+            // Complete questionnaire
+            completeQuestionnaire();
+        }
+    }
+
+    // CF Calculation Functions
+    function calculateCFHE(cfPakar, cfUser) {
+        return cfPakar * cfUser;
+    }
+
+    function combineCF(cf1, cf2) {
+        return cf1 + cf2 * (1 - cf1);
+    }
+
+    function calculateCombinedCF(symptoms) {
+        if (symptoms.length === 0) return 0;
+        
+        const cfResults = symptoms.map(s => calculateCFHE(s.cfPakar, s.cfUser));
+        let cfCombined = cfResults[0];
+        
+        for (let i = 1; i < cfResults.length; i++) {
+            cfCombined = combineCF(cfCombined, cfResults[i]);
+        }
+        
+        return cfCombined;
+    }
+
+    function diagnose() {
+        const diagnosisResults = [];
+        
+        for (const [diagnosisId, requiredSymptoms] of Object.entries(RULES)) {
+            const ruleSymptoms = requiredSymptoms
+                .map(symptomId => {
+                    const symptomData = SYMPTOMS.find(s => s.id === symptomId);
+                    const userAnswer = userAnswers[symptomId];
+                    
+                    if (symptomData && userAnswer !== undefined) {
+                        return {
+                            gejalaid: symptomId,
+                            cfPakar: symptomData.cfPakar,
+                            cfUser: userAnswer
+                        };
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+            
+            const cfCombined = calculateCombinedCF(ruleSymptoms);
+            const percentage = Math.max(0, Math.min(100, cfCombined * 100));
+            
+            diagnosisResults.push({
+                diagnosisId,
+                diagnosisName: DIAGNOSES.find(d => d.id === diagnosisId)?.name || diagnosisId,
+                cfCombined,
+                percentage
+            });
+        }
+        
+        diagnosisResults.sort((a, b) => b.percentage - a.percentage);
+        
+        const bestDiagnosis = diagnosisResults[0];
+        
+        return {
+            diagnosis: bestDiagnosis.diagnosisId,
+            diagnosisName: bestDiagnosis.diagnosisName,
+            percentage: bestDiagnosis.percentage,
+            allResults: diagnosisResults,
+            cfCombined: bestDiagnosis.cfCombined,
+            timestamp: Date.now(),
+            answers: userAnswers
+        };
+    }
+
+    function completeQuestionnaire() {
+        const result = diagnose();
+        currentResult = result;
+        
+        // Save to localStorage
+        const history = JSON.parse(localStorage.getItem('diagnosis_history') || '[]');
+        history.push(result);
+        localStorage.setItem('diagnosis_history', JSON.stringify(history));
+        
+        // Display result
+        displayResult(result);
+        navigateTo('result-page');
+    }
+
+    function displayResult(result) {
+        // Update diagnosis name and percentage
+        document.getElementById('diagnosis-name').textContent = result.diagnosisName;
+        document.getElementById('diagnosis-percentage').textContent = result.percentage.toFixed(1) + '%';
+        document.getElementById('cf-combined').textContent = result.cfCombined.toFixed(4);
+        
+        // Update progress bar
+        document.getElementById('result-progress-bar').style.width = result.percentage + '%';
+        
+        // Update emoji
+        const emoji = getStressEmoji(result.diagnosis);
+        document.getElementById('stress-emoji').textContent = emoji;
+        
+        // Update color
+        const colorClass = getStressColor(result.percentage);
+        document.getElementById('diagnosis-card').className = 'bg-white rounded-lg shadow p-6 border-2 ' + colorClass;
+        
+        // Update date
+        document.getElementById('test-date').textContent = new Date(result.timestamp).toLocaleString('id-ID');
+        
+        // Update solutions
+        const solutions = SOLUTIONS[result.diagnosis] || [];
+        const solutionsList = document.getElementById('solutions-list');
+        solutionsList.innerHTML = '';
+        
+        solutions.forEach(solution => {
+            const solutionDiv = document.createElement('div');
+            solutionDiv.className = 'flex items-start space-x-3 p-3 bg-green-50 rounded-lg';
+            solutionDiv.innerHTML = `
+                <svg class="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="text-gray-700">${solution}</span>
+            `;
+            solutionsList.appendChild(solutionDiv);
+        });
+    }
+
+    function getStressEmoji(diagnosis) {
+        const emojis = {
+            'D1': '😊',
+            'D2': '😐',
+            'D3': '😟',
+            'D4': '😰'
+        };
+        return emojis[diagnosis] || '❓';
+    }
+
+    function getStressColor(percentage) {
+        if (percentage >= 75) return 'border-red-200 bg-red-50';
+        if (percentage >= 50) return 'border-orange-200 bg-orange-50';
+        if (percentage >= 25) return 'border-yellow-200 bg-yellow-50';
+        return 'border-green-200 bg-green-50';
+    }
+
+    function downloadResult() {
+        if (!currentResult) return;
+        
+        const reportData = {
+            diagnosis: currentResult,
+            date: new Date(currentResult.timestamp).toLocaleString('id-ID')
+        };
+        
+        const dataStr = JSON.stringify(reportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `diagnosis-stress-${currentResult.timestamp}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    }
+
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('diagnosis_history') || '[]');
+        
+        // Update statistics
+        updateStatistics(history);
+        
+        // Apply filters and display results
+        filterHistory();
+    }
+
+    function updateStatistics(history) {
+        const stats = {
+            total: history.length,
+            'D1': 0,
+            'D2': 0,
+            'D3': 0,
+            'D4': 0
+        };
+        
+        history.forEach(result => {
+            if (stats[result.diagnosis] !== undefined) {
+                stats[result.diagnosis]++;
+            }
+        });
+        
+        document.getElementById('stat-total').textContent = stats.total;
+        document.getElementById('stat-tidak-stres').textContent = stats['D1'];
+        document.getElementById('stat-stres-rendah').textContent = stats['D2'];
+        document.getElementById('stat-stres-sedang').textContent = stats['D3'];
+        document.getElementById('stat-stres-tinggi').textContent = stats['D4'];
+    }
+
+    function filterHistory() {
+        const history = JSON.parse(localStorage.getItem('diagnosis_history') || '[]');
+        const searchTerm = document.getElementById('search-input')?.value.toLowerCase() || '';
+        const stressFilter = document.getElementById('stress-filter')?.value || '';
+        const timeFilter = document.getElementById('time-filter')?.value || '';
+        
+        let filteredHistory = history.filter(result => {
+            // Search filter
+            const matchesSearch = !searchTerm || 
+                result.diagnosisName.toLowerCase().includes(searchTerm) ||
+                (result.employeeName && result.employeeName.toLowerCase().includes(searchTerm));
+            
+            // Stress level filter
+            const matchesStress = !stressFilter || result.diagnosis === stressFilter;
+            
+            // Time filter
+            let matchesTime = true;
+            if (timeFilter) {
+                const resultDate = new Date(result.timestamp);
+                const now = new Date();
+                
+                switch(timeFilter) {
+                    case 'today':
+                        matchesTime = resultDate.toDateString() === now.toDateString();
+                        break;
+                    case 'week':
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        matchesTime = resultDate >= weekAgo;
+                        break;
+                    case 'month':
+                        matchesTime = resultDate.getMonth() === now.getMonth() && 
+                                        resultDate.getFullYear() === now.getFullYear();
+                        break;
+                    case 'year':
+                        matchesTime = resultDate.getFullYear() === now.getFullYear();
+                        break;
+                }
+            }
+            
+            return matchesSearch && matchesStress && matchesTime;
+        });
+        
+        displayHistoryResults(filteredHistory);
+    }
+
+    function displayHistoryResults(history) {
+        const historyList = document.getElementById('history-list');
+        const resultCount = document.getElementById('result-count');
+        const averagePercentage = document.getElementById('average-percentage');
+        
+        resultCount.textContent = history.length;
+        
+        if (history.length === 0) {
+            averagePercentage.textContent = '0.0%';
+            historyList.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16">
+                    <svg class="h-24 w-24 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <p class="text-gray-500 text-center mb-2">Tidak ada hasil diagnosa yang ditemukan</p>
+                    <p class="text-gray-400 text-sm text-center">Coba ubah filter atau lakukan diagnosa baru</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Calculate average
+        const avgPercentage = history.reduce((sum, result) => sum + result.percentage, 0) / history.length;
+        averagePercentage.textContent = avgPercentage.toFixed(1) + '%';
+        
+        // Create table
+        historyList.innerHTML = '';
+        const table = document.createElement('table');
+        table.className = 'w-full';
+        table.innerHTML = `
+            <thead>
+                <tr class="border-b bg-gray-50">
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Tanggal</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Diagnosa</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Persentase</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+        
+        const tbody = table.querySelector('tbody');
+        [...history].reverse().forEach((result, index) => {
+            const row = document.createElement('tr');
+            row.className = 'border-b hover:bg-gray-50 transition-colors';
+            const colorClass = getStressColorClass(result.diagnosis);
+            row.innerHTML = `
+                <td class="py-3 px-4 text-gray-600">${new Date(result.timestamp).toLocaleString('id-ID', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })}</td>
+                <td class="py-3 px-4">
+                    <span class="font-medium ${colorClass}">${result.diagnosisName}</span>
+                </td>
+                <td class="py-3 px-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                            <div class="${getProgressBarColor(result.diagnosis)} h-2 rounded-full" style="width: ${result.percentage}%"></div>
+                        </div>
+                        <span class="text-sm font-medium">${result.percentage.toFixed(1)}%</span>
+                    </div>
+                </td>
+                <td class="py-3 px-4">
+                    <span class="text-2xl">${getStressEmoji(result.diagnosis)}</span>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        
+        historyList.appendChild(table);
+    }
+
+    function getStressColorClass(diagnosis) {
+        const colors = {
+            'D1': 'text-green-600',
+            'D2': 'text-yellow-600',
+            'D3': 'text-orange-600',
+            'D4': 'text-red-600'
+        };
+        return colors[diagnosis] || 'text-gray-600';
+    }
+
+    function getProgressBarColor(diagnosis) {
+        const colors = {
+            'D1': 'bg-green-600',
+            'D2': 'bg-yellow-500',
+            'D3': 'bg-orange-500',
+            'D4': 'bg-red-600'
+        };
+        return colors[diagnosis] || 'bg-blue-600';
+    }
+
+    function resetFilters() {
+        document.getElementById('search-input').value = '';
+        document.getElementById('stress-filter').value = '';
+        document.getElementById('time-filter').value = '';
+        filterHistory();
+    }
+
+    function exportHistory() {
+        const history = JSON.parse(localStorage.getItem('diagnosis_history') || '[]');
+        
+        if (history.length === 0) {
+            alert('Tidak ada data untuk diekspor');
+            return;
+        }
+        
+        const dataStr = JSON.stringify(history, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `riwayat-diagnosa-${Date.now()}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if there's a saved state
+        navigateTo('landing-page');
+    });
+</script>

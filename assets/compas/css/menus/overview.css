@@ -1,0 +1,9 @@
+/* Example CSS for Overview Tab */
+.overview-card {
+    border-left: 5px solid #0e6ba8;
+    transition: transform 0.2s;
+}
+
+.overview-card:hover {
+    transform: translateY(-5px);
+}

@@ -1,0 +1,135 @@
+/* Animation Keyframes */
+@keyframes slideInRight {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.4s ease-out forwards;
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.4s ease-out forwards;
+}
+
+/* Skeleton Loader Styles */
+.skeleton {
+    background-color: #e2e5e7;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 20%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+    background-size: 200px 100%;
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    display: inline-block;
+    line-height: 1;
+    width: 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.skeleton-text {
+    height: 10px;
+    margin-bottom: 8px;
+}
+
+.skeleton-title {
+    height: 20px;
+    margin-bottom: 12px;
+    width: 70%;
+}
+
+/* Wizard Styles */
+.wizard-progress {
+    width: 100%;
+}
+
+.wizard-progress .progress {
+    height: 5px;
+    border-radius: 2px;
+    background-color: #e9ecef;
+}
+
+.wizard-progress .progress-bar {
+    background-color: #015EC2; 
+    transition: width 0.3s ease;
+}
+
+.wizard-step .title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #212529;
+}
+
+.wizard-step .title small {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 400;
+}
+
+/* Validation Styles */
+.check-valid .form-control.is-invalid,
+.check-valid .form-select.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5zM6 8.2a.6.6 0 110-1.2.6.6 0 010 1.2z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+}
+
+/* OverType styling */
+.editor-wrapper {
+    height: 350px;
+    position: relative;
+    border-radius: 15px;
+}
+
+.overtype-section {
+    background: #e2e5e7;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.overtype-header {
+    padding: 5px 20px;
+    background: #e2e5e7;
+    color: #111;
+    border-bottom: 0.5px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-floating .chosen-container-single {
+    margin-top: 20px;
+    box-shadow: none !important;
+    background-image: none !important;
+}

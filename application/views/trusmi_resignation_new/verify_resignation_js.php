@@ -1,0 +1,636 @@
+<script src="<?= base_url(); ?>assets/js/whatsapp_api.js"></script>
+<!-- Datatable Button -->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/data-table/js/jszip.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/data-table/extensions/buttons/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/datatables.net/js/dataTables.fixedColumns.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/data-table/extensions/select/js/dataTables.select.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowgroup/1.1.3/css/rowGroup.dataTables.min.css" />
+<script src="https://cdn.datatables.net/rowgroup/1.1.3/js/dataTables.rowGroup.min.js"></script>
+
+<script src="<?= base_url(); ?>assets/node_modules/slim-select/dist/slimselect.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
+
+<script>
+    $(document).ready(function() {
+        // dt_verify_resignation();
+        div_verify_resignation();
+        get_profile_resignation();
+        checkLengthData(0);
+    });
+
+    user_id = "<?= $this->session->userdata('user_id'); ?>";
+    console.log(user_id);
+    if (user_id == '2063') {
+        // slim_reason_atasan = new SlimSelect({
+        //     select: '#reason_atasan',
+        //     settings: {
+        //         placeholderText: 'Alasan Resign dari Atasan',
+        //     }
+        // })
+    }
+
+    function get_profile_resignation() {
+        id_resignation = '<?= $id_resignation ?>';
+        $.ajax({
+            url: '<?= base_url(); ?>trusmi_resignation/get_profile_resignation',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id_resignation: id_resignation
+            },
+            beforeSend: function() {
+
+            },
+            success: function(response) {
+                // console.log(response);
+                // console.log(response.employee_name);
+                $("#employee_name").html(response.employee_name == null ? '<i class="small">*no data available</i>' : response.employee_name);
+                $("#company_name").html(response.company_name == null ? '<i class="small">*no data available</i>' : response.company_name);
+                $("#department_name").html(response.department_name == null ? '<i class="small">*no data available</i>' : response.department_name);
+                $("#designation_name").html(response.designation_name == null ? '<i class="small">*no data available</i>' : response.designation_name);
+                $("#contact_no").html(response.contact_no == null ? '<i class="small">*no data available</i>' : response.contact_no);
+                $("#address").html(response.address == null ? '<i class="small">*no data available</i>' : response.address);
+                $("#reason").html(response.reason == null ? '<i class="small">*no data available</i>' : response.reason);
+                $("#note").html(response.note == null ? '<i class="small">*no data available</i>' : response.note);
+                pp = `<figure class="avatar avatar-150 coverimg rounded-circle shadow-md">
+                <img src="https://trusmiverse.com/hr/uploads/profile/${response.profile_picture}" alt="" id="" />
+                </figure>`;
+                $("#profile_picture").append(pp);
+                $("#date_of_joining").html(response.date_of_joining == null ? '<i class="small">*no data available</i>' : moment(response.date_of_joining).format('DD-MM-YYYY'));
+                $("#masa_kerja").html(response.masa_kerja == null ? '<i class="small">*no data available</i>' : response.masa_kerja);
+                $("#habis_kontrak").html(response.habis_kontrak == null ? '<i class="small">*no data available</i>' : response.habis_kontrak);
+                $("#terakhir_absen").html(response.terakhir_absen == null ? '<i class="small">*no data available</i>' : response.terakhir_absen);
+                list_inventaris(response.user_id)
+                if (response.company_id == '2') {
+                    $.ajax({
+                        url: '<?= base_url(); ?>trusmi_resignation/get_atasan_rsp',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            user_id: response.user_id
+                        },
+                        beforeSend: function() {
+
+                        },
+                        success: function(response_atasan) {
+                            // console.log(response_atasan);
+                            $("#nama_spv").html(response_atasan.nama_spv == null || response_atasan.id_user_spv == 1 || response_atasan.id_user_spv == 2 ? '<i class="small">*no data available</i>' : response_atasan.nama_spv);
+                            $("#nama_mng").html(response_atasan.nama_mng == null || response_atasan.id_user_mng == 1 || response_atasan.id_user_mng == 2 ? '<i class="small">*no data available</i>' : response_atasan.nama_mng);
+                        },
+                        error: function(xhr) { // if error occured
+
+                        },
+                        complete: function() {
+
+                        },
+                    });
+                }
+            },
+            error: function(xhr) { // if error occured
+
+            },
+            complete: function() {
+
+            },
+        });
+    }
+
+    function dt_verify_resignation() {
+        id_resignation = '<?= $id_resignation ?>';
+        $('#dt_verify_resignation').DataTable({
+            "searching": false,
+            "info": false,
+            "paging": false,
+            "destroy": true,
+            "order": [
+                [0, 'asc']
+            ],
+            responsive: true,
+            "ajax": {
+                "dataType": 'json',
+                "type": "POST",
+                "url": "<?= base_url(); ?>trusmi_resignation/dt_verify_resignation",
+                "data": {
+                    id_resignation: id_resignation,
+                }
+            },
+            select: {
+                style: 'multi'
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                'selectAll',
+                'selectNone',
+            ],
+            "columns": [{
+                    "data": "subclearance",
+                },
+                {
+                    "data": "status_resignation",
+                    "render": function(data, type, row, meta) {
+                        if (row['id_status_resignation'] == 0) {
+
+                            return `<span class="badge bg-danger data-resignation"
+                            data-index="${meta.row}" 
+                            data-id_status_resignation="${row['id_status_resignation']}" 
+                            data-id_exit_clearance="${row['id_exit_clearance']}" 
+                            data-id_resignation="${row['id_resignation']}" 
+                            data-pic="${row['pic']}" 
+                            > ${data}</span>`;
+                        } else {
+
+                            return `<span class="badge bg-success data-resignation"
+                            data-index="${meta.row}" 
+                            data-id_status_resignation="${row['id_status_resignation']}" 
+                            data-id_exit_clearance="${row['id_exit_clearance']}" 
+                            data-id_resignation="${row['id_resignation']}" 
+                            data-pic="${row['pic']}" 
+                            > ${data}</span>`;
+                        }
+                    },
+                },
+            ],
+            "initComplete": function(settings, response) {
+                count_data = 0;
+                for (let index = 0; index < response.data.length; index++) {
+                    if (response.data[index].id_status_resignation > 0) {
+                        count_data = parseInt(count_data) + 1;
+                    }
+                }
+                // console.log(count_data);
+                // console.log(response.data.length);
+                if (response.data.length == count_data) {
+                    // console.log("test");
+                    $(".dt-button").hide();
+                    $(".dt-button").hide();
+                    $("#btn_approve_exit_clearance").hide();
+                }
+            },
+        });
+    }
+
+    function div_verify_resignation() {
+        id_resignation = '<?= $id_resignation ?>';
+        var table_pinjam = '';
+        $.ajax({
+            url: '<?= base_url() ?>trusmi_resignation/check_peminjaman_rakon',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id_resignation: id_resignation
+            },
+            beforeSend: function() {
+
+            },
+            success: function(response) {
+                if (response.data.length > 0) {
+                    table_pinjam += `<table class="table table-sm" style="font-size:8pt;">
+                    <thead>
+                                        <tr>
+                                        <th>No. Kode</th>
+                                            <th>Barang</th>
+                                            <th>Pinjam</th>
+                                            <th>Kembali</th>
+                                            <th>Sisa</th>
+                                            </tr>
+                                    </thead>
+                                    <tbody>`;
+
+                    for (let index = 0; index < response.data.length; index++) {
+                        id_peminjam = response.data[index].id_peminjam;
+                        no_adj = response.data[index].no_adj;
+                        kode_barang = response.data[index].kode_barang;
+                        nama_barang = response.data[index].nama_barang;
+                        pinjam = response.data[index].pinjam;
+                        kembali = response.data[index].kembali;
+                        sisa = response.data[index].sisa;
+                        table_pinjam += `<tr>
+                                        <td>${kode_barang}<hr style="margin:0px;padding:0;">${no_adj}</td>
+                                        <td>${nama_barang}</td>
+                                        <td>${pinjam}</td>
+                                        <td>${kembali}</td>
+                                        <td>${sisa}</td>
+                                        </tr>`
+                    }
+
+                    table_pinjam += `</tbody>
+                                    </table>`;
+                }
+            },
+            error: function(xhr) { // if error occured
+
+            },
+            complete: function() {
+
+            },
+        });
+
+        $.ajax({
+            url: '<?= base_url(); ?>trusmi_resignation/dt_verify_resignation',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id_resignation: id_resignation
+            },
+            beforeSend: function() {
+
+            },
+            success: function(response) {
+                // console.log(response.data);
+                // user_id = "<?= $this->session->userdata("user_id") ?>";
+                // console.log(response.data[0].id_clearance);
+
+                atasan = false;
+                for (let index2 = 0; index2 < response.data.length; index2++) {
+                    if (response.data[index2].id_clearance == 1) {
+                        atasan = true;
+                    }
+                }
+
+                if (atasan == true) {
+                    componentItem = `<div class="col-lg-12 col-md-12 col-sm-12 fade-in" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="card">
+                                    <div class="card-body" style="background-color: #F6F7FB;">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                                <label for="" style="font-weight:bold;">Alasan Resign dari Atasan</label>
+                                            </div>
+                                            <form id='form_reason_atasan'>
+                                                <div class="col-sm-12" style="margin-bottom: 5px;margin-top: 5px;">
+                                                    <select name="reason_atasan" id="reason_atasan" class="form-control">
+                                                        <option value="" data-placeholder="true"></option>
+                                                        <option value="Tidak Perform">Tidak Perform</option>
+                                                        <option value="Resign Kemauan Sendiri">Resign Kemauan Sendiri</option>
+                                                    </select>
+                                                </div>
+                                            </form>
+                                            <div class="col-sm-2 col-md-4 col-lg-6">
+                                            </div>
+                                            <div class="col-sm-10 col-md-8 col-lg-6" style="text-align: right;">
+                                                <button type="button" class="btn btn-md btn-outline-theme" id="btn-reason-atasan" style="margin: 5px;">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                } else {
+                    componentItem = ``;
+                }
+
+                for (let index = 0; index < response.data.length; index++) {
+                    reason_atasan = response.data[index].reason_atasan;
+                    if (response.data[index].id_status_resignation == 0) {
+                        status_clearance = `<span class="badge bg-warning">${response.data[index].status_resignation}</span>`;
+                    } else if (response.data[index].id_status_resignation == 1) {
+                        status_clearance = `<span class="badge bg-success">${response.data[index].status_resignation}</span>`;
+                    } else {
+                        status_clearance = `<span class="badge bg-danger">${response.data[index].status_resignation}</span>`;
+                    }
+                    if (response.data[index].id_status_resignation == 1) {
+                        btn_reject = ``;
+                        btn_approve = ``;
+                        text_note = `
+                        <textarea name="note" id="note_${response.data[index].id_exit_clearance}" 
+                            class="form-control border-start-0" cols="30" rows="5" style="min-height: 100px;" 
+                            required="" readonly>${response.data[index].note == null ? "" : response.data[index].note }</textarea>
+                            <label>Note : </label>`;
+                    } else {
+                        btn_reject = `<button type="button" class="btn btn-md btn-outline-danger" id="btn-reject_${response.data[index].id_exit_clearance}" style="margin: 5px;" onclick="approveResignation('${response.data[index].id_exit_clearance}','4')">Reject</button>`;
+                        btn_approve = `<button type="button" class="btn btn-md btn-outline-theme" id="btn-approve_${response.data[index].id_exit_clearance}" style="margin: 5px;" onclick="approveResignation('${response.data[index].id_exit_clearance}','1')">Approve</button>`;
+                        text_note = `
+                            <textarea name="note" id="note_${response.data[index].id_exit_clearance}" 
+                            class="form-control border-start-0" cols="30" rows="5" style="min-height: 100px;" 
+                            required="">${response.data[index].note == null ? "" : response.data[index].note }</textarea>
+                            <label>Note : </label>`;
+                    }
+                    console.log(response.data[index].id_subclearance);
+                    // jika subclearance = peminjaman rakon
+                    tanggungan_asset = '';
+                    kunci_approve = '';
+                    if (response.data[index].id_subclearance == 19) {
+                        if (table_pinjam != '') {
+                            tanggungan_asset += `
+                            <div class="col-sm-12 col-md-12 col-lg-12 mt-2">
+                            <label for="" style="font-weight:bold;">List Peminjaman Asset</label>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12"> ${table_pinjam} </div>`;
+                            kunci_approve = 1; // kunci tidak bisa approve
+                        }
+                    }
+
+                    if (kunci_approve == 1) {
+                        btn_reject = '<small>*tidak bisa di approve sebelum karyawan mengembalikan asset</small>';
+                        btn_approve = '';
+                    }
+
+                    btn_confirm = ``;
+                    componentItem += `
+                            <div class="col-lg-6 col-md-12 col-sm-12 fade-in" style="margin-top:5px;margin-bottom:5px;">
+                                <div class="card">
+                                    <div class="card-body" style="background-color: #F6F7FB;">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12 col-lg-12" style="text-align: right;">
+                                                ${status_clearance}
+                                            </div>
+                                                ${tanggungan_asset}
+                                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                                <label for="" style="font-weight:bold;">${response.data[index].subclearance}</label>
+                                            </div>
+                                            <form id='form_exit_clearance_${response.data[index].id_exit_clearance}'>
+                                                <div class="col-sm-12" style="margin-bottom: 5px;margin-top: 5px;">
+                                                    <input type="hidden" name="id_exit_clearance" value="${response.data[index].id_exit_clearance}" readonly>
+                                                    <input type="hidden" name="id_resignation" value="<?= $_GET['id'] == null ? '' : $_GET['id']; ?>" readonly>
+                                                    <input type="hidden" name="pic" value="<?= $this->session->userdata("user_id"); ?>" readonly>
+                                                    <input type="hidden" name="status" id="status_resignation_${response.data[index].id_exit_clearance}" readonly>
+                                                    <div class="input-group input-group-lg">
+                                                        <div class="form-floating">
+                                                            ${text_note}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="col-sm-12 col-md-12 col-lg-12" style="text-align: right;">
+                                                ${btn_reject}
+                                                ${btn_approve}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                }
+                $("#div_verify_resignation").empty();
+                $("#div_verify_resignation").append(componentItem);
+
+                select_reason_atasan = new SlimSelect({
+                    select: '#reason_atasan',
+                    settings: {
+                        placeholderText: 'Alasan Resign dari Atasan',
+                    }
+                });
+
+                select_reason_atasan.setSelected(reason_atasan);
+
+                if (reason_atasan == null || reason_atasan == 'null' || reason_atasan == '') {
+                    select_reason_atasan.enable();
+                    // console.log(reason_atasan);
+                } else {
+                    select_reason_atasan.disable();
+                    $("#btn-reason-atasan").addClass("d-none");
+                    // console.log(reason_atasan);
+                    // console.log('test');
+                }
+
+
+                $("#btn-reason-atasan").click(function() {
+                    // $("#i-reason-atasan").val('');
+                    $("#modal-reason-atasan").modal("show");
+                    r_atasan = $("#reason_atasan").val();
+                    console.log(r_atasan);
+                    $("#i_reason_atasan").val(r_atasan);
+                });
+
+                $("#btn-save-reason-atasan").click(function() {
+                    resignation_id = "<?= $_GET['id'] ?>";
+                    r_atasan = $("#reason_atasan").val();
+                    $.ajax({
+                        url: '<?= base_url('trusmi_resignation/update_reason_atasan') ?>',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            reason_atasan: r_atasan,
+                            resignation_id: resignation_id
+                        },
+                        beforeSend: function() {
+
+                        },
+                        success: function(response) {
+                            console.log(r_atasan);
+                            console.log(resignation_id);
+                            console.log(response);
+                            $("#modal-reason-atasan").modal("hide");
+                            if (response.status == 200) {
+                                select_reason_atasan.disable();
+                                $("#btn-reason-atasan").addClass("d-none");
+                                success_alert('Saved');
+                            } else if (response.status == 409) {
+                                error_alert('Failed');
+                            } else {
+                                error_alert('Unrecognized Error');
+                            }
+                        },
+                        error: function(xhr) { // if error occured
+
+                        },
+                        complete: function() {
+
+                        },
+                    });
+                });
+            },
+            error: function(xhr) { // if error occured
+
+            },
+            complete: function() {
+
+            },
+        });
+    }
+
+
+    var table = $('#dt_verify_resignation').DataTable();
+    $('#dt_verify_resignation tr').on('click', function() {
+        $(this).toggleClass('selected');
+        var value = $(this).find('td:first').html();
+    });
+
+    table.on('select', function(e, dt, type, indexes) {
+        $('#form_exit_clearance').empty();
+        $("#dt_verify_resignation tr.selected").each(function(index, row) {
+            getRowItem(
+                $(row).find('td .data-resignation').data("id_exit_clearance"),
+                $(row).find('td .data-resignation').data("id_resignation"),
+                $(row).find('td .data-resignation').data("pic"),
+                $(row).find('td .data-resignation').data("index"),
+            );
+        });
+        checkLengthData($('.item').length)
+    });
+    table.on('deselect', function(e, dt, type, indexes) {
+        $('#form_exit_clearance').empty();
+        $("#dt_verify_resignation tr.selected").each(function(index, row) {
+            getRowItem(
+                $(row).find('td .data-resignation').data("id_exit_clearance"),
+                $(row).find('td .data-resignation').data("id_resignation"),
+                $(row).find('td .data-resignation').data("pic"),
+                $(row).find('td .data-resignation').data("index"),
+            );
+        });
+        checkLengthData($('.item').length)
+    });
+
+    function getRowItem(id_exit_clearance, id_resignation, pic, index) {
+        // console.log(id_exit_clearance, id_resignation, pic, index);
+        cart = '';
+        cart += `
+                <div class="row">
+                    <input type="hidden" class="form-control col item item_${index}" readonly name="id_exit_clearance[]" value="${id_exit_clearance}" />
+                    <input type="hidden" class="form-control col item item_${index}" readonly name="id_resignation[]" value="${id_resignation}" />
+                    <input type="hidden" class="form-control col item item_${index}" readonly name="pic[]" value="${pic}" />
+                </div>
+                            `;
+        $('#form_exit_clearance').append(cart);
+    }
+
+    function checkLengthData(length) {
+        // alert(length);
+        if (parseInt(length) < 1) {
+            $('#btn_approve_exit_clearance').removeAttr("btn-primary");
+            $('#btn_approve_exit_clearance').attr("disabled", true);
+            $('#btn_approve_exit_clearance').attr("class", "btn btn-default");
+            $('#btn_approve_exit_clearance').html("Silahkan pilih Exit Clearance");
+        } else {
+            $('#btn_approve_exit_clearance').removeAttr("btn-default");
+            $('#btn_approve_exit_clearance').attr("disabled", false);
+            $('#btn_approve_exit_clearance').attr("class", "btn btn-primary");
+            $('#btn_approve_exit_clearance').html("Approve Exit Clearance");
+        }
+    }
+
+    function approveResignation(id_exit_clearance, status_resignation) {
+        $("#modalAddConfirm").modal("show");
+        $("#u_id_exit_clearance").val(id_exit_clearance);
+        $("#status_resignation").val(status_resignation);
+        $(`#status_resignation_${id_exit_clearance}`).val(status_resignation);
+        if (status_resignation == '1') {
+            $("#btn_save_confirm").html('Yes, Approve');
+            $("#btn_save_confirm").removeClass("btn-outline-danger");
+            $("#btn_save_confirm").addClass("btn-outline-theme");
+        } else if (status_resignation == '4') {
+            $("#btn_save_confirm").html('Yes, Reject');
+            $("#btn_save_confirm").removeClass("btn-outline-theme");
+            $("#btn_save_confirm").addClass("btn-outline-danger");
+        } else {
+            $("#btn_save_confirm").html('Yes, Save');
+            $("#btn_save_confirm").removeClass("btn-outline-danger");
+            $("#btn_save_confirm").addClass("btn-outline-theme");
+        }
+    }
+
+
+    function updateApproval() {
+        let u_id_exit_clearance = $("#u_id_exit_clearance").val();
+        form = $(`#form_exit_clearance_${u_id_exit_clearance}`);
+        $.ajax({
+            url: '<?= base_url('trusmi_resignation/update_approval') ?>',
+            type: 'POST',
+            dataType: 'json',
+            data: form.serialize(),
+            beforeSend: function() {
+                $('#btn_save_confirm').attr('disabled', true);
+                $("#btn_save_confirm").html("Please wait...");
+            },
+            success: function(response) {
+                if (response.status == 200) {
+                    success_alert('Saved');
+                } else if (response.status == 409) {
+                    error_alert('Failed');
+                } else {
+                    error_alert('Unrecognized Error');
+                }
+                form[0].reset();
+                $("#modalAddConfirm").modal("hide");
+                div_verify_resignation();
+                checkLengthData(0);
+            },
+            error: function(xhr) { // if error occured
+                error_alert('Failed, Error Occured');
+            },
+            complete: function() {
+                $('#btn_save_confirm').attr('disabled', false);
+                $("#btn_save_confirm").html("Yes, Approve");
+            },
+        });
+    }
+
+
+    function success_alert(text) {
+        textMsg = text == null ? '' : text;
+        new PNotify({
+            title: `Success`,
+            text: `${textMsg}`,
+            icon: 'icofont icofont-checked',
+            type: 'success',
+            delay: 1500,
+        });
+    }
+
+    function error_alert(text) {
+        new PNotify({
+            title: `Oopss`,
+            text: `${text}`,
+            icon: 'icofont icofont-info-circle',
+            type: 'error',
+            delay: 1500,
+        });
+    }
+
+    function list_inventaris(user) {
+        $('#dt_list_inventaris').DataTable({
+            "searching": true,
+            "info": true,
+            "paging": true,
+            "destroy": true,
+            "dom": 'Bfrtip',
+            buttons: [{
+                title: 'Data Inventaris Karyawan',
+                extend: 'excelHtml5',
+                text: 'Export to Excel',
+                footer: true
+            }],
+            "ajax": {
+                "dataType": 'json',
+                "type": "POST",
+                "url": '<?= base_url('trusmi_resignation/list_inventaris') ?>',
+                "data": {
+                    user
+                }
+            },
+            "columns": [{
+                    'data': 'id_aset',
+                    "render": function(data, type, row, meta) {
+                        return meta.row + 1
+                    },
+                    'className': 'text-center'
+                },
+                {
+                    'data': 'jenis_aset',
+                    'className': 'text-center'
+                },
+                {
+                    'data': 'nama_aset',
+                    'className': 'text-left'
+                },
+                {
+                    'data': 'receive_at',
+                    'className': 'text-center'
+                },
+                {
+                    'data': 'receive_by',
+                }
+            ],
+            "order": [
+                [0, 'asc']
+            ],
+            "rowGroup": {
+                dataSrc: 'jenis_aset',
+                startRender: function(rows, group) {
+                    return '<span class="text-left d-block font-weight-bold">' + group + '</span>';
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,41 @@
+{
+  "name": "@mind-wired/core",
+  "version": "0.1.13",
+  "description": "javascript based mindmap library. It provides dragging, aligment, styling(node, edge) and editing functionality.",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack",
+    "dev": "NODE_ENV=development webpack-dev-server ",
+    "test": "mocha --require @babel/register",
+    "prepublishOnly": "NODE_ENV=production webpack"
+  },
+  "keywords": [
+    "mindmap"
+  ],
+  "bugs": {
+    "url": "https://github.com/yeori/mind-wired/issues",
+    "email": "yeori.seo@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yeori/mind-wired"
+  },
+  "author": "yeori.seo@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/register": "^7.17.7",
+    "css-loader": "^6.7.1",
+    "mini-css-extract-plugin": "^2.6.0",
+    "mocha": "^10.0.0",
+    "sass": "^1.52.1",
+    "sass-loader": "^13.0.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
+  }
+}

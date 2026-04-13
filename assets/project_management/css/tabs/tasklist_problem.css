@@ -1,0 +1,119 @@
+.skeleton-box {
+	display: inline-block;
+	height: 1em;
+	position: relative;
+	overflow: hidden;
+	background-color: #e2e2e2;
+	border-radius: 4px;
+}
+.skeleton-box::after {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	transform: translateX(-100%);
+	background-image: linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 0) 0,
+		rgba(255, 255, 255, 0.2) 20%,
+		rgba(255, 255, 255, 0.5) 60%,
+		rgba(255, 255, 255, 0)
+	);
+	animation: shimmer 2s infinite;
+	content: "";
+}
+@keyframes shimmer {
+	100% {
+		transform: translateX(100%);
+	}
+}
+.badge-divisi {
+	background-color: #f1f3f5;
+	color: #495057;
+	font-weight: 500;
+	padding: 0.35rem 0.65rem;
+	border-radius: 4px;
+	border: 1px solid #dee2e6;
+}
+.deadline-badge {
+	display: inline-block;
+	padding: 0.25rem 0.5rem;
+	font-size: 0.85rem;
+	font-weight: 600;
+	border-radius: 4px;
+	border: 1px dashed;
+}
+.progress-mini {
+	height: 6px;
+	background-color: #e9ecef;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.progress-mini .progress-bar {
+	height: 100%;
+}
+.badge-status {
+	padding: 0.35rem 0.65rem;
+	border-radius: 4px;
+	font-size: 0.85rem;
+	font-weight: 600;
+	display: inline-block;
+}
+.badge-status.bs-danger {
+	background-color: #f8d7da;
+	color: #842029;
+}
+.badge-status.bs-warning {
+	background-color: #fff3cd;
+	color: #664d03;
+}
+.table-responsive {
+	overflow: visible !important;
+}
+.accordion-body {
+	overflow: visible !important;
+}
+
+.bg-soft-blue {
+	background-color: #e0e5f3;
+}
+
+.border-light-subtle {
+	border-color: #e0e5f3;
+	border-width: 2px;
+}
+
+.btn-soft-danger {
+	background-color: #f8d7da;
+	color: #842029;
+}
+
+.btn-soft-danger:hover {
+	background-color: #f1b0b7;
+	color: #58151c;
+}
+
+.btn-soft-primary {
+	background-color: #cfe2ff;
+	color: #0a58ca;
+}
+
+.btn-soft-primary:hover {
+	background-color: #9ec5fe;
+	color: #052c65;
+}
+
+.btn-soft-secondary {
+	background-color: #e9ecef;
+	color: #495057;
+}
+
+.btn-soft-secondary:hover {
+	background-color: #dde0e3;
+	color: #212529;
+}
+
+.min-w-100px {
+	min-width: 100px;
+}

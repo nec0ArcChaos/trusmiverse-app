@@ -1,0 +1,788 @@
+<?php
+
+ob_start();
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Pengajuan_dev extends CI_Controller
+{
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->helper("url");
+		// $this->load->model('model1');
+		$this->load->model('Model_auth', 'auth');
+		$this->load->model('eaf/model_pengajuan', 'model_pengajuan');
+		$this->load->library("session");
+		$this->load->library('FormatJson');
+		// if ($this->session->userdata('user_id') != "") {
+		// } else {
+		// 	redirect('login', 'refresh');
+		// }
+
+		if ($this->session->userdata('user_id') != "") {
+			$user_id = $this->session->userdata('user_id');
+			$check_hak_akses = $this->auth->check_hak_akses('eaf/pengajuan', $user_id);
+			if ($check_hak_akses != 'allowed') {
+				redirect('forbidden_access', 'refresh');
+			}
+		} else {
+			redirect('login', 'refresh');
+		}
+
+		//cek login
+		// $username = $this->session->userdata("username");
+		// $password = $this->session->userdata("password");
+		// $id_user  = $this->session->userdata("id_user");
+
+		// $cek_auth = $this->model1->cek_auth($username, $password);
+
+		// if ($cek_auth > 0) {
+		// 	//cek hak navigasi
+		// 	$access 	= 22;
+		// 	$cek_status = $this->model1->cek_status_navigasi($id_user, $access);
+
+		// 	if ($cek_status == '0') {
+		// 		redirect("access_denied");
+		// 	} else {
+		// 		//do nothing
+		// 	}
+		// } else {
+		// 	redirect("login");
+		// }
+	}
+
+	function index()
+	{
+
+		$user_id			= $this->session->userdata('user_id');
+		if (isset($user_id)) {
+			$data['content'] 		= "eaf/pengajuan/index_dev";
+			$data['pageTitle'] 	= "Pengajuan EAF";
+			$data['css'] 		= "eaf/pengajuan/css";
+			$data['js'] 		= "eaf/pengajuan/js_dev";
+
+			$data['pengaju'] 		=  $this->model_pengajuan->get_pengaju()->result();
+			$data['kategori'] 		=  $this->model_pengajuan->get_kategori()->result();
+			// $data['jenis_biaya'] 	=  $this->model_pengajuan->jenis_biaya()->result();
+			$data['company'] 	=  $this->model_pengajuan->get_company()->result();
+			$data['tipe'] 			=  1;
+			$data['project'] 		=  $this->model_pengajuan->get_project();
+
+			$this->load->view("layout/main", $data);
+		} else {
+			redirect("login");
+		}
+	}
+
+	function list_revisi()
+	{
+
+		$data['content'] 		= "eaf/pengajuan/revisi";
+		$data['pageTitle'] 	= "Revisi EAF";
+		$data['css'] 		= "eaf/pengajuan/css";
+		$data['js'] 		= "eaf/pengajuan/revisi_js";
+		$data['tipe'] 		=  2;
+
+
+		$this->load->view("layout/main", $data);
+	}
+
+	function save_revisi()
+	{
+		$id_pengajuan = $_POST['id_pengajuan'];
+		$revisi_approval = $this->model_pengajuan->get_revisi_approval($id_pengajuan);
+
+		if ($revisi_approval['level'] == 1) {
+			$status = 1;
+		} else if ($revisi_approval['level'] == 10) {
+			$status = 10;
+		} else {
+			$status = 2;
+		}
+
+		$pengajuan = array('status' => $status);
+
+		$this->db->where('id_pengajuan', $id_pengajuan);
+		$result['pengajuan'] 		= $this->db->update('e_eaf.e_pengajuan', $pengajuan);
+
+		$detail_keperluan = array(
+			'nominal_uang' => str_replace(".", "", $_POST['nominal_revisi']),
+			'note' => str_replace(array("\r", "\n"), ' ', $_POST['note_revisi']),
+		);
+
+		$this->db->where('id_pengajuan', $id_pengajuan);
+		$result['detail_keperluan'] = $this->db->update('e_eaf.e_detail_keperluan', $detail_keperluan);
+
+		$approval = array(
+			'id_pengajuan'      => $id_pengajuan,
+			'id_user_approval'  => $revisi_approval['id_user_approval'],
+			'level'             => $revisi_approval['level'],
+			'flag'              => 'Pengajuan'
+		);
+
+		$result['approval'] = $this->db->insert('e_eaf.e_approval', $approval);
+		if ($result['detail_keperluan']) {
+			$result = $this->model_pengajuan->get_pengajuan_for_wa($id_pengajuan, $status);
+		}
+		echo json_encode($result);
+	}
+
+	function list_reject()
+	{
+
+		$data['content'] 		= "eaf/pengajuan/list_reject";
+		$data['pageTitle'] 	= "Reject EAF";
+		$data['css'] 		= "eaf/pengajuan/css";
+		$data['js'] 		= "eaf/pengajuan/list_reject_js";
+		$data['tipe'] 		=  3;
+
+
+		$this->load->view("layout/main", $data);
+	}
+
+	function get_list_eaf()
+	{
+		$id_user 	= $this->session->userdata('user_id');
+		$id_div 	= $this->session->userdata('id_divisi');
+		$startdate 	= $_POST['datestart'];
+		$enddate 	= $_POST['dateend'];
+		$tipe 		= $_POST['tipe'];
+
+		$data = $this->model_pengajuan->get_list_eaf($id_user, $id_div, $startdate, $enddate, $tipe);
+		echo json_encode($data);
+	}
+
+	function data_detail_pengajuan()
+	{
+		$id_pengajuan = $_POST['id_pengajuan'];
+
+		$data['detail_pengajuan'] = $this->model_pengajuan->detail_pengajuan($id_pengajuan);
+		$data['tracking_approval'] = $this->model_pengajuan->tracking_approval($id_pengajuan);
+
+
+		$this->load->view('eaf/pengajuan/detail_pengajuan', $data);
+	}
+
+	function data_detail_revisi()
+	{
+		$id_pengajuan = $_POST['id_pengajuan'];
+
+		$data['detail_pengajuan'] = $this->model_pengajuan->detail_pengajuan($id_pengajuan);
+		$data['tracking_approval'] = $this->model_pengajuan->tracking_approval($id_pengajuan);
+
+
+		$this->load->view('eaf/pengajuan/detail_revisi', $data);
+	}
+
+	function insert_pengajuan()
+	{
+		if (!$this->session->userdata('user_id')) {
+			return redirect('login', 'refresh');
+		}
+
+		$tgl_pengajuan = date('Y-m-d');
+		$id_pengajuan = $this->model_pengajuan->getideaf();
+		$id_user = $this->session->userdata('user_id');
+		$id_divisi = 1;
+
+		$nama_penerima = str_replace(['\'', '"'], ['`', '``'], $_POST['nama_penerima']);
+		$pengaju = $_POST['pengaju'];
+		$id_kategori = $_POST['kategori'];
+		$nama_tipe = $_POST['tipe'];
+		$leave_id = $_POST['leave_id'];
+		$keperluan = explode('|', $_POST['keperluan']);
+		$jenis = $keperluan[0];
+		$budget = $keperluan[1];
+		$user_approval = $keperluan[3];
+		$user_verified = $keperluan[8];
+
+		$nama_bank = $_POST['nama_bank'] ?? '';
+		$no_rek = $_POST['rekening'] ?? '';
+		$pilihan_ba = $_POST['pilihan_ba'] ?? '';
+		$tgl_jtp = $_POST['tgl_jtp'] ?? '';
+
+		// STATUS APPROVAL
+		$status_app = $user_verified == '' ? 1 : 10;
+		$id_user_approval = $user_verified == '' ? $user_approval : $user_verified;
+
+		// TANGGAL
+		if (!empty($_POST['tanggal_2'])) {
+			$tanggal2 = $_POST['tanggal_2'];
+		} else {
+			date_default_timezone_set('Asia/Jakarta');
+			$tanggal2 = date('Y-m-d H:i:s');
+		}
+
+		$result['warning'] = '';
+
+		// Kondisi untuk Pinjaman Karyawan
+		if ($id_kategori == 20) {
+			$ck = $this->model_pengajuan->cek_validasi_pinjaman($pengaju);
+
+			if ($ck['masa_kerja'] < 4) {
+				$result['warning'] = 'Masa Kerja Minimal 4 Bulan';
+			} elseif ($ck['jenis_karyawan'] != 'reguler') {
+				$result['warning'] = 'Pinjaman hanya untuk karyawan Reguler';
+			} elseif ($ck['tgl_pinjam'] > 14 && $id_user != 78) {
+				$result['warning'] = 'Input Pinjaman tidak boleh lebih dari tanggal 14';
+			} elseif ($ck['status'] == 'Belum Terbayar' && $id_user != 78) {
+				$result['warning'] = 'Pinjaman sebelumnya, Belum Terbayar Lunas';
+			}
+		}
+
+		if ($result['warning'] == '') {
+			// ===== INSERT e_pengajuan =====
+			$pengajuan = [
+				'id_pengajuan' => $id_pengajuan,
+				'tgl_input' => $tanggal2,
+				'nama_penerima' => $nama_penerima,
+				'pengaju' => $pengaju,
+				'id_kategori' => $id_kategori,
+				'status' => $status_app,
+				'id_divisi' => $id_divisi,
+				'id_user' => $id_user,
+				'flag' => 'Pengajuan',
+				'jenis' => $jenis,
+				'tgl_jtp' => $tgl_jtp,
+				'budget' => $budget,
+				'leave_id' => $leave_id,
+			];
+
+			// Tambahan khusus id_kategori = 20
+			if ($id_kategori == 20) {
+				$pengajuan['jumlah_termin'] = $_POST['jumlah_termin'];
+				$pengajuan['nominal_termin'] = str_replace('.', '', $_POST['nominal_termin']);
+			}
+
+			// Tanggal akhir auto pengajuan (EAF Otomatis)
+			$tgl_akhir_auto_pengajuan = $this->input->post('tgl_akhir_auto_pengajuan');
+			if (!empty($tgl_akhir_auto_pengajuan)) {
+				$pengajuan['tgl_akhir_auto_pengajuan'] = $tgl_akhir_auto_pengajuan;
+			}
+
+			$result['pengajuan'] = $this->db->insert('e_eaf.e_pengajuan', $pengajuan);
+
+			// ===== INSERT TIPE PEMBAYARAN =====
+			$pembayaran = [
+				'id_pengajuan' => $id_pengajuan,
+				'nama_tipe' => $nama_tipe,
+				'nama_bank' => $nama_bank,
+				'no_rek' => $no_rek,
+			];
+			$result['tipe_pembayaran'] = $this->db->insert('e_eaf.e_tipe_pembayaran', $pembayaran);
+
+			// ===== INSERT APPROVAL =====
+			$approval = [
+				'id_pengajuan' => $id_pengajuan,
+				'id_user_approval' => $id_user_approval,
+				'level' => $status_app,
+				'flag' => 'Pengajuan',
+			];
+			$result['approval'] = $this->db->insert('e_eaf.e_approval', $approval);
+
+			// ===== INSERT DETAIL KEPERLUAN =====
+			$note_clear1 = str_replace(["\r", "\n", '\'', '"'], [' ', ' ', '`', '``'], $_POST['note']);
+
+			$entries = [
+				'id_pengajuan' => $id_pengajuan,
+				'nama_keperluan' => $keperluan[2],
+				'nominal_uang' => str_replace('.', '', $_POST['total']),
+				'note' => str_replace("'", '`', $note_clear1),
+				'tgl_nota' => $_POST['tgl_nota'],
+			];
+			$result['detail_keperluan'] = $this->db->insert('e_eaf.e_detail_keperluan', $entries);
+
+			// ===== UPLOAD FOTO NOTA =====
+			if (!empty($_POST['nota'])) {
+				define('UPLOAD_DIR', './uploads/eaf/');
+
+				$string = explode(',', $_POST['nota']);
+				$img = base64_decode(str_replace(' ', '+', $string[1]));
+				$name = uniqid() . '.' . $string[0];
+
+				file_put_contents(UPLOAD_DIR . $name, $img);
+
+				$foto = [
+					'id_pengajuan' => $id_pengajuan,
+					'photo_acc' => $name,
+					'flag' => 'BUKTI_NOTA',
+				];
+				$result['photo_acc'] = $this->db->insert('e_eaf.e_photo_acc', $foto);
+			}
+
+			// ===== UPLOAD BA (Jika ada) =====
+			if ($pilihan_ba == 'ba') {
+				$data_ba = [
+					'id_pengajuan' => $id_pengajuan,
+					'photo_acc' => 'ba',
+					'flag' => 'EAF-BA',
+				];
+				$result['photo_acc'] = $this->db->insert('e_eaf.e_photo_acc', $data_ba);
+			}
+
+			// ====== INTEGRASI TOUR LEADER ======
+			$company_id = $this->input->post('company');
+			$keperluan_value = $this->input->post('keperluan');
+			$jenis_komisi = $this->input->post('jenis_komisi');
+
+			if (
+				$company_id == 5 &&
+				$keperluan_value &&
+				strpos($keperluan_value, '55|7|Fee Tour Leader Store') !== false
+			) {
+				$this->handle_integrasi_tl($id_pengajuan, $jenis_komisi);
+			}
+
+			if ($result['pengajuan']) {
+				$result['id_pengajuan'] = $this->model_pengajuan->get_no_last_pengajuan();
+			}
+		}
+
+		echo json_encode($result);
+	}
+
+	// Method handle insert data Integrasi TL
+	private function handle_integrasi_tl($id_pengajuan, $jenis_komisi)
+	{
+		$integrasi_tl = [
+			'id_pengajuan' => $id_pengajuan,
+			'status_penerima' => $this->input->post('status_penerima_rekening'),
+			'pic_marketing' => $this->input->post('pic_marketing'),
+			'created_at' => date('Y-m-d H:i:s'),
+		];
+
+		if ($jenis_komisi == 'komisi_tl') {
+			$integrasi_tl['no_reservasi'] = $this->input->post('no_reservasi');
+			$integrasi_tl['kode_kasir'] = $this->input->post('kode_kasir');
+		}
+
+		// Upload foto buku rekening
+		$foto_rek = $this->input->post('foto_buku_rekening');
+		if (!empty($foto_rek)) {
+			define('UPLOAD_DIR_FOTO_REKENING', './uploads/integrasi_tl/foto_buku_rekening/');
+			$arr = explode(',', $foto_rek);
+			$img = base64_decode(str_replace(' ', '+', $arr[1]));
+			$name = uniqid() . '.' . $arr[0];
+			file_put_contents(UPLOAD_DIR_FOTO_REKENING . $name, $img);
+			$integrasi_tl['buku_rekening'] = $name;
+		}
+
+		// Upload lampiran reservasi
+		$lampiran = $this->input->post('lampiran_reservasi');
+		if (!empty($lampiran)) {
+			define('UPLOAD_DIR_LAMPIRAN', './uploads/integrasi_tl/lampiran_reservasi/');
+			$arr = explode(',', $lampiran);
+			$img = base64_decode(str_replace(' ', '+', $arr[1]));
+			$name = uniqid() . '.' . $arr[0];
+			file_put_contents(UPLOAD_DIR_LAMPIRAN . $name, $img);
+			$integrasi_tl['lampiran_reservasi'] = $name;
+		}
+
+		// Insert integrasi TL
+		$result['integrasi_tl'] = $this->db->insert('e_eaf.integrasi_tl', $integrasi_tl);
+
+		// Update reservasi di DB Tour Leader
+		$no_reservasi = $this->input->post('no_reservasi');
+		if (!empty($no_reservasi) && $jenis_komisi == 'komisi_tl') {
+			$db_tl = $this->load->database('db_tour_leader', true);
+			$db_tl->where('no_reservasi', $no_reservasi);
+			$result['update_reservasi'] = $db_tl->update('tbl_reservasi', [
+				'id_pengajuan' => $id_pengajuan,
+			]);
+		}
+	}
+
+	function list_lpj()
+	{
+
+		$data['content'] 		= "eaf/pengajuan/lpj";
+		$data['pageTitle'] 	= "Pengajuan LPJ";
+		$data['css'] 		= "eaf/pengajuan/css";
+		$data['js'] 		= "eaf/pengajuan/lpj_js";
+
+		$this->load->view("layout/main", $data);
+	}
+
+	function get_list_lpj()
+	{
+		$id_user 	= $this->session->userdata('user_id');
+
+		$data['data'] = $this->model_pengajuan->get_list_lpj($id_user);
+		echo json_encode($data);
+	}
+
+	function detail_lpj()
+	{
+		$id_user = $this->session->userdata('user_id');
+		$tanggal = date("Y-m-d  H:i:s");
+		$id_pengajuan = $_POST['id_pengajuan'];
+		$id_biaya = $_POST['id_biaya'];
+		$id_temp = $this->model_pengajuan->getidtemp();
+
+		$temp = array(
+			'id_temp' 	=> $id_temp,
+			'nama_temp' => 'LPJ Ke-' . $id_temp
+		);
+
+		$pengajuan = array(
+			'temp'			=> $id_temp,
+			'id_pengajuan' 	=> $id_pengajuan
+		);
+
+		$detail_keperluan = array(
+			'id_lpj'		=> $id_temp,
+			'id_pengajuan' 	=> $id_pengajuan,
+			'id_biaya_lpj' 	=> $id_biaya
+		);
+
+		$this->db->insert('e_eaf.e_temp', $temp);
+
+		$this->db->where('id_pengajuan', $id_pengajuan);
+		$this->db->update('e_eaf.e_pengajuan', $pengajuan);
+
+		$this->db->where('id_pengajuan', $id_pengajuan);
+		$this->db->update('e_eaf.e_detail_keperluan', $detail_keperluan);
+
+
+		$id_user = $this->session->userdata('user_id');
+		$id_divisi = $this->session->userdata('id_divisi');
+
+		$data['id_temp'] = $id_temp;
+		$data['id_pengajuan'] = $id_pengajuan;
+		$data['get_detail_keperluan_2'] = $this->model_pengajuan->get_detail_keperluan($id_temp);
+		$data['penerima'] = $this->model_pengajuan->get_nama($id_temp);
+		$data['kategori'] =  $this->model_pengajuan->get_kategori_2()->result();
+		$data['id_biaya_lpj'] =  $this->model_pengajuan->get_id_biayaa_lpj($id_temp)->result();
+
+		$data['nama_divisi'] =  $this->model_pengajuan->get_divisi($id_user)->result();
+		$data['id_user'] 	= $id_user;
+		$data['id_divisi'] 	= $id_divisi;
+
+		$this->load->view('eaf/pengajuan/detail_lpj', $data);
+		// $this->load->view("layout/main", $data);
+
+	}
+
+	public function remove_temp()
+	{
+		$id_temp = $_POST['id_temp'];
+		$data_update = array(
+			'temp' => ''
+		);
+
+		$data_update_2 = array(
+			'id_lpj' => ''
+		);
+
+		$this->db->where('id_temp', $id_temp)->delete('e_eaf.e_temp');
+		$this->db->where('temp', $id_temp);
+		$this->db->update('e_eaf.e_pengajuan', $data_update);
+		$this->db->where('id_lpj', $id_temp);
+		$result = $this->db->update('e_eaf.e_detail_keperluan', $data_update_2);
+		echo json_encode($result);
+	}
+
+	public function save_lpj()
+	{
+		$id_lpj     = $this->model_pengajuan->getidlpj();
+		$tanggal    = date("Y-m-d  H:i:s");
+
+		$string 	= $_POST['string'];
+		define('UPLOAD_DIR', './uploads/eaf/');
+
+		if ($string != '' || $string != null) {
+			$string     = explode(',', $string);
+			$img        = str_replace(' ', '+', $string[1]);
+			$data       = base64_decode($img);
+			$name       = uniqid() . '.' . $string[0];
+			$file       = UPLOAD_DIR . $name;
+			$success    = file_put_contents($file, $data);
+		}
+		$attachment = $_POST['attachment'];
+		if ($attachment == 1) {
+			$name_new = $name;
+			$flag_new = 'LPJ-BUKTI-NOTA';
+		} else {
+			$name_new = null;
+			$flag_new = 'LPJ-BA';
+		}
+		$entries_foto = array(
+			'id_pengajuan'  => $id_lpj,
+			'photo_acc'     => $name_new,
+			'flag'          => $flag_new
+		);
+
+		$this->db->insert('e_eaf.e_photo_acc', $entries_foto);
+
+		$id_temp = $_POST['id_temp'];
+
+		$usera = $this->model_pengajuan->eaf_usera($id_temp);
+
+		// 737 id user db rsp finance
+		// 711 jenis pengajuan DLK 81
+		if ($usera['jenis'] == "81" && ($name_new == null || $name_new != null)) {
+			$status_app         = 6;
+			// 747 id user db rsp mba fafri | 78 id hr nya
+			// $id_user_approval   = 747;
+			$id_user_approval   = 78;
+
+			$level				= 10;
+		} else if ($name_new == null && $usera['jenis'] != "81") {
+			$status_app         = $usera['status'];
+			$id_user_approval   = $usera['user'];
+			$level				= 1;
+		} else if (str_replace('.', '', $_POST['nominal_lpj']) > str_replace('.', '', $_POST['nominal_pengajuan'])) {
+			$status_app         = $usera['status'];
+			$id_user_approval   = $usera['user'];
+			$level				= 1;
+		} else {
+			$status_app         = 6;
+			// $id_user_approval   = 737;
+			// 488 id hr ade nofianti safira
+			// 1709bu secil mgr finance
+			$id_user_approval   = 1709;
+			$level				= 5;
+		}
+
+		if ($_SESSION['user_id'] == 1) {
+			$div = 1;
+		} else {
+			$div = $_POST['id_divisi'];
+		}
+
+		$data_lpj = array(
+			"id_pengajuan"      => $id_lpj,
+			"id_divisi"         => $div,
+			"id_kategori"       => $_POST['kategori'],
+			"id_user"           => $_POST['id_user'],
+			"status"            => $status_app,
+			"flag"              => "LPJ",
+			"nama_penerima"     => $_POST['nama_penerima'],
+			'tgl_input'         => $tanggal,
+			'id_biaya_lpj'      => $_POST['id_biaya_lpj'],
+			'jenis'             => $usera['jenis'],
+			'sub_biaya'         => $usera['sub_biaya'],
+			'budget'            => $usera['budget'],
+			'note'				=> $_POST['keterangan'],
+		);
+
+		$result['pengajuan_lpj'] = $this->db->insert('e_eaf.e_pengajuan', $data_lpj);
+
+		$data_approv = array(
+			"id_pengajuan"      => $id_lpj,
+			"id_user_approval"  => $id_user_approval,
+			"level"             => $level,
+			"flag"              => 'LPJ'
+		);
+
+		$result['approval_lpj'] = $this->db->insert('e_eaf.e_approval', $data_approv);
+
+		$data_update = array(
+			'temp'              => $id_lpj
+		);
+
+		$this->db->where('id_pengajuan', $_POST['id_pengajuan_satu']);
+		$this->db->where('temp', $_POST['id_temp']);
+		$result['pengajuan'] = $this->db->update('e_eaf.e_pengajuan', $data_update);
+
+		$detail_keperluan = array(
+			'id_lpj' => $id_lpj
+		);
+
+		$this->db->where('id_lpj', $_POST['id_temp']);
+		$result['detail_keperluan'] = $this->db->update('e_eaf.e_detail_keperluan', $detail_keperluan);
+
+		$header_lpj = array(
+			'id_lpj'        => $id_lpj,
+			'id_pengajuan'  => $_POST['id_pengajuan'],
+			'nama_lpj'      => $_POST['nama_lpj'],
+			'note_lpj'      => str_replace(array("\r", "\n"), ' ', $_POST['note_lpj']),
+			'nominal_lpj'   => str_replace('.', '', $_POST['nominal_lpj']),
+		);
+
+		$result['header_lpj'] = $this->db->insert('e_eaf.e_header_lpj', $header_lpj);
+
+		$approval = array(
+			'id_temp_lpj'   => $id_lpj,
+			'id_pengajuan'  => $_POST['id_pengajuan']
+		);
+
+		$result['approval'] = $this->db->update('e_eaf.e_approval', $approval, 'id_pengajuan');
+
+		if ($result['approval']) {
+			$result['data'] = $this->model_pengajuan->get_lpj_for_wa($id_lpj);
+		}
+		echo json_encode($result);
+	}
+
+	function get_pengajuan_for_wa($id)
+	{
+		$check 				= $this->model_pengajuan->get_level($id);
+		$result['level'] 	= $check['level'];
+		$result['data'] 	= $this->model_pengajuan->get_pengajuan_for_wa($id, $check['level']);
+		echo json_encode($result);
+	}
+
+	// function get_de_blok()
+	// {
+	// 	$id 		= $_POST['id_project'];
+	// 	$type 		= $_POST['blok'];
+	// 	$id_jenis 	= $_POST['id_jenis'];
+	// 	$data 	= $this->model_pengajuan->get_de_blok($id, $type, $id_jenis);
+	// 	echo json_encode($data);
+	// }
+
+	function cek_dlk($id_hr)
+	{
+		$cek = $this->model_pengajuan->cek_dlk($id_hr);
+
+		if ($cek->num_rows() > 0) {
+			$dlk = $cek->result();
+			$jenis_biaya = $this->model_pengajuan->jenis_biaya_dlk()->row_array();
+
+			// foreach ($dlk as $row) {
+			// 	echo '<option value="'. $jenis_biaya['id_jenis'].'|'.$jenis_biaya['id_biaya'].'|'.$jenis_biaya['jenis'].'|'.$jenis_biaya['id_user_approval'].'|'.$jenis_biaya['id_tipe_biaya'].'|'.$jenis_biaya['budget'].'|'.$jenis_biaya['project'].'|'.$jenis_biaya['blok'].'|'.$jenis_biaya['id_user_verified'].'|'.$row->leave_id.'-'.$row->total_eaf.'-'.$row->reason .'" class="dlk_makan">'. $jenis_biaya['jenis'] .  ' (' . $row->total_makan . 'x makan di ' . $row->kota . ' dari ' . $row->from_date . ' ' . substr($row->start_time, 0, 5) . ' sampai ' . $row->to_date . ' ' . substr($row->end_time, 0, 5) . ') (' . $jenis_biaya['employee'] . ')' .'</option>';
+			// }
+			foreach ($dlk as $row) {
+				$data[] = array(
+					"dtext" 		=> $jenis_biaya['jenis'] .  ' (' . $row->total_makan . 'x makan di ' . $row->kota . ' dari ' . $row->from_date . ' ' . substr($row->start_time, 0, 5) . ' sampai ' . $row->to_date . ' ' . substr($row->end_time, 0, 5) . ') (' . $jenis_biaya['employee'] . ')',
+					"dvalue" 		=> $jenis_biaya['id_jenis'] . '|' . $jenis_biaya['id_biaya'] . '|' . $jenis_biaya['jenis'] . '|' . $jenis_biaya['id_user_approval'] . '|' . $jenis_biaya['id_tipe_biaya'] . '|' . $jenis_biaya['budget'] . '|' . $jenis_biaya['project'] . '|' . $jenis_biaya['blok'] . '|' . $jenis_biaya['id_user_verified'] . '|' . $row->leave_id . '-' . $row->total_eaf . '-' . $row->reason,
+				);
+			}
+
+			// $data = $this->model_pengajuan->jenis_biaya_dlk()->result();
+			echo json_encode($data);
+		} else {
+			echo "tidak ada";
+		}
+	}
+
+	// Start | Tambah Edit Blok dan Note Setelah Pengajuan EAF
+	function faisal()
+	{
+		$data['view'] 		= "eaf/pengajuan/index_faisal";
+		$data['pageTitle'] 	= "Pengajuan EAF";
+		$data['css'] 		= "eaf/pengajuan/css";
+		$data['js'] 		= "eaf/pengajuan/js_faisal";
+
+		$data['pengaju'] 		=  $this->model_pengajuan->get_pengaju()->result();
+		$data['kategori'] 		=  $this->model_pengajuan->get_kategori()->result();
+		$data['jenis_biaya'] 	=  $this->model_pengajuan->jenis_biaya()->result();
+		$data['tipe'] 			=  1;
+		$data['project'] 		=  $this->model_pengajuan->get_project();
+
+		$this->load->view("main", $data);
+	}
+
+	function edit_blok($id)
+	{
+		$res = $this->model_pengajuan->edit_blok($id);
+		echo json_encode($res);
+	}
+
+	// function get_de_blok_new()
+	// {
+	// 	$id 	= $_POST['id'];
+	// 	$type 	= $_POST['type'];
+	// 	$jenis 	= $_POST['jenis'];
+	// 	$blok 	= $_POST['blok'];
+
+	// 	$data = $this->model_pengajuan->get_de_blok($id, $type, $jenis);
+	// 	// echo json_encode($data);
+
+	// 	echo '<option data-placeholder="true" disabled>- Pilih Blok -</option>';
+	// 	foreach ($data as $row) {
+	// 		echo '<option value="' . $row->blok . '">' . $row->blok . '</option>';
+	// 	}
+
+	// 	for ($i = 0; $i < count($blok); $i++) {
+	// 		echo '<option value="' . $blok[$i] . '">' . $blok[$i] . '</option>';
+	// 	}
+	// }
+
+	function simpan_edit_blok()
+	{
+		$id 		= $_POST['id_aju'];
+		$blok_old	= $_POST['blok_old'];
+		$blok_new 	= ($_POST['list_blok_edit'] == "" ? NULL : $_POST['list_blok_edit']);
+		$note 		= $_POST['note_pengajuan'];
+
+		$data = array(
+			"note" 		=> $note,
+			"blok" 		=> $blok_new,
+			"blok_old" 	=> $blok_old,
+			"updated_blok_by" => $_SESSION['id_user'],
+			"updated_blok_at" => date('Y-m-d H:i:s')
+		);
+
+		$this->db->where("id_pengajuan", $id);
+		$data['update_blok'] = $this->db->update("e_detail_keperluan", $data);
+		echo json_encode($data);
+	}
+	// End | Tambah Edit Blok dan Note Setelah Pengajuan EAF
+
+	function edit_nota()
+	{
+		$id_pengajuan 	= $_POST['id_nota'];
+		$string 		= $_POST['nota_new'];
+
+		if ($string != "") {
+
+			define('UPLOAD_DIR', './uploads/eaf/');
+
+			$string     = explode(',', $string);
+			$img        = str_replace(' ', '+', $string[1]);
+			$data       = base64_decode($img);
+			$name       = uniqid() . '.' . $string[0];
+			$file       = UPLOAD_DIR . $name;
+			$success    = file_put_contents($file, $data);
+
+
+			if ($_POST['proses'] == 'update') {
+				$photo = array(
+					'photo_acc' => $name
+				);
+				$this->db->where('id_pengajuan', $id_pengajuan);
+				$result['photo_acc'] = $this->db->update('e_eaf.e_photo_acc', $photo);
+			} else {
+				$photo = array(
+					'id_pengajuan' 	=> $id_pengajuan,
+					'photo_acc' 	=> $name,
+					'flag' 			=> 'BUKTI_NOTA'
+				);
+				$result['photo_acc'] = $this->db->insert('e_eaf.e_photo_acc', $photo);
+			}
+		}
+
+		echo json_encode($result);
+	}
+
+	function jenis_biaya_by_company()
+	{
+		$company_id 		= $_POST['company_id'];
+		// $nominal 			= $_POST['b_nominal'];
+		$nominal = preg_replace("/[^0-9]/", "", $_POST['b_nominal']);
+
+		$data = $this->model_pengajuan->jenis_biaya_by_company($company_id, $nominal)->result();
+
+		echo json_encode($data);
+	}
+
+	function get_no_reservasi()
+	{
+		$data = $this->model_pengajuan->get_no_reservasi_dev();
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($data));
+	}
+
+	function get_pic_marketing()
+	{
+		$data = $this->model_pengajuan->get_pic_marketing();
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($data));
+	}
+}

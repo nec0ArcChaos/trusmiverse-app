@@ -1,0 +1,25 @@
+.border-custom {
+  border: 1px solid #e6edf9;
+  border-radius: 4px;
+}
+
+.form-label-custom {
+  margin-bottom: 0.2rem;
+}
+
+.border-custom:focus {
+  border-bottom: 2px solid rgba(var(--WinDOORS-theme-rgb));
+  border-width: 80%;
+}
+
+.border-custom:hover {
+  /* border-bottom: 1px solid rgba(var(--WinDOORS-theme-rgb)); */
+  border-width: 80%;
+}
+
+@media (max-width: 34em) {
+  .main {
+    min-width: 150px;
+    width: auto;
+  }
+}

@@ -1,0 +1,145 @@
+<link href="<?php echo base_url() ?>assets/fancybox/jquery.fancybox.min.css" rel="stylesheet">
+<link href="<?= base_url(); ?>assets/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+
+
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/dropdown.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/transition.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/form.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/button.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/input.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/label.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/icon.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/loader.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/popup.css">
+<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/semantic/components/rating.css">
+
+<style>
+    html {
+        zoom: 80%;
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: transparent;
+        /* Ubah nilai alpha sesuai kebutuhan */
+    }
+
+    .spinner-dashboard {
+        --bs-spinner-width: 1rem;
+        --bs-spinner-height: 1rem;
+        --bs-spinner-vertical-align: -0.125em;
+        --bs-spinner-border-width: 0.10em;
+        --bs-spinner-animation-speed: 0.75s;
+        --bs-spinner-animation-name: spinner-border;
+        border: var(--bs-spinner-border-width) solid currentcolor;
+        border-right-color: transparent;
+    }
+
+    .border-late {
+        border: solid 2px #FFB64D;
+    }
+
+    .border-ontime {
+        border: solid 2px #DEEDB3;
+    }
+
+    .active-4 {
+        appearance: none;
+        background-color: white !important;
+        border: 1px solid rgba(27, 31, 35, 0.15) !important;
+        border-radius: 4px !important;
+        box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0,
+            rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+        box-sizing: border-box;
+        color: #242424;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+            "Segoe UI Emoji";
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        min-width: 96px;
+        list-style: none;
+        /* padding: 5px 12px; */
+        position: relative;
+        transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        vertical-align: middle;
+        white-space: nowrap;
+        word-wrap: break-word;
+    }
+
+    .dark-mode .active-4 {
+        background-color: #292929;
+        color: #ffffff;
+        border: solid 1px #666666;
+    }
+
+    .dark-mode .active-4:hover {
+        background-color: #323334;
+    }
+
+    .active-4:hover {
+        background-color: #f3f4f6;
+        text-decoration: none;
+        transition-duration: 0.2s;
+    }
+
+    .active-4:active {
+        background-color: #edeff2;
+        box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+        transition: none 0s;
+    }
+
+    .active-4:focus {
+        outline: 1px transparent;
+    }
+
+    .active-4:before {
+        display: none;
+    }
+
+    .action-4:-webkit-details-marker {
+        display: none;
+    }
+
+    .nice-select .current {
+        color: black;
+    }
+
+    .nice-select-dropdown .list li {
+        color: black;
+    }
+
+    .form-select>.search {
+        top: 1rem !important;
+    }
+
+    .form-select>.text {
+        top: 1rem !important;
+    }
+
+    .form-select>.dropdown.icon {
+        top: 1.5rem !important;
+    }
+
+    .form-select.ui.selection.dropdown {
+        min-width: unset !important;
+        background-color: rgba(var(--WinDOORS-theme-rgb), 0.15) !important;
+        /* color: var(--WinDOORS-theme); */
+    }
+
+    .float-label {
+        top: -0.2rem;
+    }
+</style>
+
+<link rel="stylesheet" href="<?= base_url(); ?>assets/jquery-confirm/jquery-confirm.min.css" />
+<link rel="stylesheet" href="<?= base_url(); ?>assets/font_awesome/css/all.min.css" />

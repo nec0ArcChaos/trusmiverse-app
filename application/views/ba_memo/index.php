@@ -1,0 +1,133 @@
+<main class="main mainheight">
+    <div class="container-fluid mb-4">
+        <div class="row align-items-center page-title">
+            <div class="col col-md mb-2 mb-sm-0">
+                <div class="form-group mb-3 position-relative check-valid">
+                    <div class="input-group input-group-lg">
+                        <?php $accessable = array(1, 979, 323, 1161, 778, 2765, 2378, 5684, 2951); ?>
+                        <?php if (in_array($this->session->userdata('user_id'), $accessable)) { ?>
+                            <span class="input-group-text text-theme bg-white border-end-0"><i class="bi bi-building"></i></span>
+                            <div class="form-floating">
+                                <select name="company" id="company" class="form-control border-start-0">
+                                    <option value="0">All Companies</option>
+                                    <?php foreach ($get_company as $cmp) : ?>
+                                        <option value="<?php echo $cmp->company_id ?>"><?php echo $cmp->company ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                                <label>Company</label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-md mb-2 mb-sm-0">
+                <div class="form-group mb-3 position-relative check-valid">
+                    <div class="input-group input-group-lg">
+                        <?php if (in_array($this->session->userdata('user_id'), $accessable)) { ?>
+                            <span class="input-group-text text-theme bg-white border-end-0"><i class="bi bi-person-rolodex"></i></span>
+                            <div class="form-floating">
+                                <select name="department" id="department" class="form-control border-start-0">
+                                    <option value="0">All Departments</option>
+                                </select>
+                                <label>Department</label>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md mb-2 mb-sm-0">
+                <div class="form-group mb-3 position-relative check-valid">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text text-theme bg-white border-end-0"><i class="bi bi-calendar"></i></span>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" name="periode" id="periode" value="<?php echo date('Y-m') ?>" />
+                            <label>Periode</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md mb-2 mb-sm-0">
+                <span class="btn btn-primary" id="btn_filter" style="width: 100%;" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Filter</span>
+            </div>
+            <div class="col-auto ps-0">
+
+            </div>
+        </div>
+        <div class="row">
+            <nav aria-label="breadcrumb" class="breadcrumb-theme">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Trusmiverse</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><?= $pageTitle; ?></li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="m-3">
+        <div class="col-12 col-lg-12 col-xl-12 col-xxl-12 position-relative column-set">
+            <div class="card border-0">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-auto">
+                                <i class="bi bi-calendar4-range h5 avatar avatar-40 bg-light-theme rounded"></i>
+                            </div>
+                            <div class="col-auto align-self-center">
+                                <h6 class="fw-medium mb-0"><?= $pageTitle; ?></h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-primary">
+                                <i class="bi bi-person-workspace"></i>Input
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style="padding: 10px;" id="table_rekap_absen">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<!-- Modal Import Haris Hadir-->
+<div class="modal fade" id="modal_import_harus_hadir" tabindex="-1" aria-labelledby="modalAddConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header row align-items-center">
+                <div class="col-auto">
+                    <i class="bi bi-clipboard-check h5 avatar avatar-40 bg-light-blue text-blue rounded"></i>
+                </div>
+                <div class="col">
+                    <h6 class="fw-medium mb-0" id="modalAddConfirmLabel">Import Harus Hadir</h6>
+                    <p class="text-secondary small">Pastikan tidak ada data kosong pada file lampiran !</p>
+                </div>
+                <div class="col-auto ps-0">
+                    <div class="dropdown d-inline-block">
+                        <a class="btn btn-link btn-square text-secondary dd-arrow-none dropdown-toggle" role="button" aria-expanded="false" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 col-lg-12 col-xl-12 mb-4">
+                    <form id="form_harus_hadir">
+                        <div class="mb-3 col-12 col-md-12">
+                            <label for="attachment" class="form-label-custom required">Excel File (xls, xlsx)</label>
+                            <input type="file" class="form-control border-custom" name="attachment" id="attachment" aria-describedby="attachment" placeholder="">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-md btn-outline-secondary" style="margin-right: 10px;" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-md btn-outline-theme" id="btn_save_confirm">Yes, Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Import Haris Hadir -->

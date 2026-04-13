@@ -1,0 +1,6 @@
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.\*)$ https://trusmicorp.com/rspproject/assets/pdf/$1 [L,QSA]
