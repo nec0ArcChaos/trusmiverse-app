@@ -173,8 +173,7 @@
 			"columns": [{
 					'data': 'designation_id',
 					'render': function(data, type, row) {
-						edit = '<span style="cursor: pointer;" class="btn btn-primary shadow btn-xs sharp me-1 edit" data-designation_id="' + data + '" data-designation_name="' + row['designation_name'] + '" data-department_id="' + row['department_id'] + '" data-company_id="' + row['company_id'] + '" data-report_to="' + row['report_to'] + '"><i class="fas fa-pencil-alt"></i></span>';
-						del = '<span style="cursor: pointer;" class="btn btn-danger shadow btn-xs sharp me-1 delete" data-designation_id="' + data + '" data-designation_name="' + row['designation_name'] + '"><i class="fas fa-trash"></i></span>';
+						edit = '<button style="cursor: pointer;" class="btn btn-md btn-outline-primary me-1 edit" data-designation_id="' + data + '" data-designation_name="' + row['designation_name'] + '" data-department_id="' + row['department_id'] + '" data-company_id="' + row['company_id'] + '" data-report_to="' + row['report_to'] + '"><i class="bi bi-pencil"></i> Edit</button>';
 
 						return edit;
 					}
