@@ -71,8 +71,8 @@
                             </form>
                             <div class="row mb-3" align="right">
                                 <div class="col-12">
-                                    <button class="btn btn-sm btn-success" id="btn_add">Add</button>
-                                    <button class="btn btn-sm btn-primary" id="btn_update" style="display: none;">Update</button>
+                                    <button class="btn btn-md btn-outline-success" id="btn_add"><i class="bi bi-plus-lg"></i> Add</button>
+                                    <button class="btn btn-md btn-outline-primary" id="btn_update" style="display: none;"><i class="bi bi-pencil"></i> Update</button>
                                 </div>
                             </div>
                         </div>

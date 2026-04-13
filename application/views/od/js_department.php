@@ -104,15 +104,19 @@
 			$('#department_id').val($(this).data('department_id'));
 			$('#department_name').val($(this).data('department_name'));
 			$('#company_id').val($(this).data('company_id')).trigger('change');
-			$('#location_id').val($(this).data('location_id')).trigger('change');
 			$("#head_id").val($(this).data('head_id')).trigger('change');
 			$("#break").val($(this).data('break')).trigger('change');
 			$('#department_kode').val($(this).data('department_kode'));
+			
+			var location_id = $(this).data('location_id');
+			var company_id = $(this).data('company_id');
+			
 			$.ajax({
-				url: '<?php echo base_url() ?>od_department/get_location/' + $(this).data('company_id') + '/' + $(this).data('location_id'),
+				url: '<?php echo base_url() ?>od_department/get_location/' + company_id + '/' + location_id,
 				dataType: 'html',
 				success: function(data) {
 					$('#location_id').empty().append(data);
+					$('#location_id').val(location_id).trigger('change');
 				}
 			});
 		});
@@ -161,10 +165,8 @@
 			"columns": [{
 					'data': 'department_id',
 					'render': function(data, type, row) {
-						edit = '<span style="cursor: pointer;" class="btn btn-primary shadow btn-xs sharp me-1 edit" data-department_id="' + data + '" data-department_name="' + row['department_name'] + '" data-department_id="' + row['department_id'] + '" data-company_id="' + row['company_id'] + '" data-location_id="' + row['location_id'] + '" data-head_id="' + row['head_id'] + '" data-break="' + row['break'] + '" data-department_kode="' + row['department_kode'] + '"><i class="fas fa-pencil-alt"></i></span>';
-						del = '<span style="cursor: pointer;" class="btn btn-danger shadow btn-xs sharp me-1 delete" data-department_id="' + data + '" data-department_name="' + row['department_name'] + '"><i class="fas fa-trash"></i></span>';
+						edit = '<button style="cursor: pointer;" class="btn btn-md btn-outline-primary me-1 edit" data-department_id="' + data + '" data-department_name="' + row['department_name'] + '" data-department_id="' + row['department_id'] + '" data-company_id="' + row['company_id'] + '" data-location_id="' + row['location_id'] + '" data-head_id="' + row['head_id'] + '" data-break="' + row['break'] + '" data-department_kode="' + row['department_kode'] + '"><i class="bi bi-pencil"></i> Edit</button>';
 
-						// return edit + del;
 						return edit;
 					}
 				},
