@@ -102,7 +102,7 @@
 			$('#btn_update').show();
 			$('#designation_id').val($(this).data('designation_id'));
 			$('#designation_name').val($(this).data('designation_name'));
-			$('#company_id').val($(this).data('company_id')).trigger('change');
+			$('#company_id').val($(this).data('company_id'));
 			$.ajax({
 				url: '<?php echo base_url() ?>od_designation/get_department/' + $(this).data('company_id') + '/' + $(this).data('department_id'),
 				dataType: 'html',
