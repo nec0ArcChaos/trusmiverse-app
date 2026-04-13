@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="<?= base_url() ?>assets/fancybox/jquery.fancybox.min.css" />
-
+<main class="main mainheight">
+<div class="container-fluid">
 <div class="row" style="margin-top: 10px;">
     <div class="col-12">
         <div class="card">
@@ -64,3 +64,5 @@
         </div>
     </div>
 </div>
+</div>
+</main>

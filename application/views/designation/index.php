@@ -1,4 +1,6 @@
 
+<main class="main mainheight">
+<div class="container-fluid">
 <div class="row" style="margin-top: 10px;">
     <div class="col-5">
 
@@ -75,3 +77,5 @@
         </div>
     </div>
 </div>
+</div>
+</main>

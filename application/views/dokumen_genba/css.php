@@ -1,0 +1,1 @@
+<link rel="stylesheet" href="<?= base_url() ?>assets/fancybox/jquery.fancybox.min.css" />

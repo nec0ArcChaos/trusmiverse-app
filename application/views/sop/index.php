@@ -1,24 +1,5 @@
-<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-
-<link rel="stylesheet" href="<?= base_url() ?>assets/fancybox/jquery.fancybox.min.css" />
-
-<link rel="stylesheet" href="<?= base_url() ?>">
-<style>
-    #modal_add_berkas {
-        overflow-y: scroll;
-    }
-
-    li {
-        list-style: inherit;
-    }
-
-    ul {
-        padding: 0;
-        margin: 1rem;
-    }
-</style>
-
-
+<main class="main mainheight">
+<div class="container-fluid">
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -1113,4 +1094,6 @@ Departement	: (Sesuai Dengan Divisi Yang dipilih)</textarea>
             </div>
         </div>
     </div>
+</div>
+</main>
 </div>
