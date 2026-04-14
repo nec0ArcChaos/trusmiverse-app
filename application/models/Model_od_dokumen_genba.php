@@ -19,6 +19,9 @@ class Model_od_dokumen_genba extends CI_Model
 		d.department_name AS nama_department,
 		g.divisi,
 		s.nama_dokumen,
+		DATE_FORMAT(s.tgl_terbit, '%d-%m-%Y') AS tgl_terbit,
+		s.penjelasan,
+		COALESCE(GROUP_CONCAT(DISTINCT des.designation_name SEPARATOR ', '), '-') AS designation_name,
 		g.temuan,
 		g.tanggal,
 		g.analisa,
@@ -40,11 +43,12 @@ class Model_od_dokumen_genba extends CI_Model
 		LEFT JOIN xin_companies c ON g.company_id = c.company_id
 		LEFT JOIN xin_departments d ON g.department_id = d.department_id
 		LEFT JOIN trusmi_sop s ON g.id_dokumen = s.id_sop
+		LEFT JOIN xin_designations des ON FIND_IN_SET(des.designation_id, s.designation)
 		LEFT JOIN trusmi_m_rekomendasi r ON g.rekomendasi = r.id
 		LEFT JOIN trusmi_m_masalah m ON g.masalah = m.id
 		LEFT JOIN xin_employees ne ON FIND_IN_SET(ne.user_id, g.narasumber) > 0
 	WHERE
-		g.id_genba IS NOT NULL AND DATE(g.created_at) BETWEEN '$start' AND '$end'
+		g.id_genba IS NOT NULL" . ($start != '' && $end != '' ? " AND DATE(g.created_at) BETWEEN '$start' AND '$end'" : "") . "
 	GROUP BY
 		g.id_genba";
 		return $this->db->query($sql)->result();

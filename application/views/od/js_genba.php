@@ -12,20 +12,28 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        let start = moment().startOf('month');
-        let end = moment().endOf('month');
+        let isAllTime = true;
 
-        function cb(start, end) {
-            $('#reportrange input').html(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-            $('input[name="datestart"]').attr('value', start.format('YYYY-MM-DD'));
-            $('input[name="dateend"]').attr('value', end.format('YYYY-MM-DD'));
+        function cb(start, end, label) {
+            if (label === 'All Time' || isAllTime) {
+                $('#range').val('All Time');
+                $('input[name="datestart"]').val('');
+                $('input[name="dateend"]').val('');
+                isAllTime = true;
+            } else {
+                $('#range').val(start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
+                $('input[name="datestart"]').val(start.format('YYYY-MM-DD'));
+                $('input[name="dateend"]').val(end.format('YYYY-MM-DD'));
+                isAllTime = false;
+            }
         }
 
         $('#range').daterangepicker({
-            startDate: start,
-            endDate: end,
+            startDate: moment().startOf('month'),
+            endDate: moment().endOf('month'),
             "drops": "down",
             ranges: {
+                'All Time': [moment('2000-01-01'), moment()],
                 'Today': [moment(), moment()],
                 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
                 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
@@ -35,9 +43,24 @@
             }
         }, cb);
 
-        cb(start, end);
+        // Event listener untuk Apply button
+        $('#range').on('apply.daterangepicker', function(ev, picker) {
+            let label = picker.chosenLabel;
+            if (label === 'All Time') {
+                isAllTime = true;
+            } else {
+                isAllTime = false;
+            }
+            cb(picker.startDate, picker.endDate, label);
+            show_filter();
+        });
 
-        listGenba('<?= date('Y-m-01') ?>', '<?= date('Y-m-t') ?>');
+        // Default: All Time
+        $('#range').val('All Time');
+        $('input[name="datestart"]').val('');
+        $('input[name="dateend"]').val('');
+
+        listGenba('', '');
     });
 
     function listGenba(start, end) {
@@ -80,6 +103,27 @@
                         $(td).css({ "word-wrap": "break-word", "white-space": "normal" });
                     }
                 },
+                {
+                    'data': 'tgl_terbit',
+                    "render": function(data) {
+                        return data || '-';
+                    }
+                },
+                {
+                    'data': 'penjelasan',
+                    "render": function(data) {
+                        return data ? '<small>' + data.substring(0, 50) + (data.length > 50 ? '...' : '') + '</small>' : '-';
+                    },
+                    "createdCell": function(td) {
+                        $(td).css({ "word-wrap": "break-word", "white-space": "normal" });
+                    }
+                },
+                {
+                    'data': 'designation_name',
+                    "render": function(data) {
+                        return data || '-';
+                    }
+                },
                 { 'data': 'temuan' },
                 { 'data': 'analisa' },
                 { 'data': 'solusi' },
@@ -115,8 +159,8 @@
     }
 
     function show_filter() {
-        start = $('#datestart').val();
-        end = $('#dateend').val();
+        var start = $('#datestart').val();
+        var end = $('#dateend').val();
         listGenba(start, end);
     }
 </script>

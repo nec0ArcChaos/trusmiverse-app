@@ -50,6 +50,9 @@
                                     <th>Departmen</th>
                                     <th>Narasumber</th>
                                     <th>Dokumen</th>
+                                    <th>Tgl Terbit</th>
+                                    <th>Penjelasan</th>
+                                    <th>Jabatan</th>
                                     <th>Temuan</th>
                                     <th>Analisa</th>
                                     <th>Solusi</th>

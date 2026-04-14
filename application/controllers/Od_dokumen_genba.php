@@ -28,8 +28,8 @@ class Od_dokumen_genba extends CI_Controller
 
 	function listGenba()
 	{
-		$start = $_POST['start'];
-		$end = $_POST['end'];
+		$start = isset($_POST['start']) ? $_POST['start'] : '';
+		$end = isset($_POST['end']) ? $_POST['end'] : '';
 		$data['data'] = $this->model->getGenba($start, $end);
 		echo json_encode($data);
 	}
