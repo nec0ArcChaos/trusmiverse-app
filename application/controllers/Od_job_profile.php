@@ -44,6 +44,21 @@ class Od_job_profile extends CI_Controller
 		$this->load->view('layout/main', $data);
 	}
 
+	function form_add()
+	{
+		$data['pageTitle'] = "Tambah Job Profile";
+		$data['css']       = "od/css_form_job_profile";
+		$data['js']        = "od/js_form_job_profile";
+		$data['content']   = "od/form_job_profile";
+
+		$data['companies'] = $this->model->get_companies()->result();
+		$data['roles']     = $this->db->where_not_in('role_id', [1, 11, 12, 13, 14])
+			->get('xin_user_roles')->result();
+		$data['master']    = $this->db->get('trusmi_m_memo')->result();
+
+		$this->load->view('layout/main', $data);
+	}
+
 	function print_($no_jp, $level)
 	{
 		$data['jp']       = $this->model->data_jp(null, null, null, $no_jp)->row_array();

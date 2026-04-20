@@ -36,9 +36,9 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <button type="button" class="btn btn-theme" data-bs-toggle="modal" data-bs-target="#modal_add_interview">
+                                    <a href="<?= base_url('od_job_profile/form_add') ?>" class="btn btn-theme">
                                         <i class="bi bi-plus-circle"></i> Add Data
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
