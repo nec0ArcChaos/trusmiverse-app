@@ -1,31 +1,33 @@
-<script src="<?php echo base_url() ?>assets/js/daterangepicker.js"></script>
-<script src="<?= base_url() ?>assets/vendor/ckeditor/ckeditor.js"></script>
 <!-- Datepicker -->
 <script src="<?php echo base_url(); ?>assets/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>/assets/fancybox/jquery.fancybox.min.js"></script>
-<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/sweetalert/js/sweetalert.min.js"></script> -->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/fancybox/jquery.fancybox.min.js"></script>
 
-
-<!-- Datatable -->
-<script src="<?php echo base_url() ?>assets/js/jquery.dataTables.min.js"></script>
+<!-- Datatable Buttons (core DataTable already loaded in main layout) -->
 <script src="<?php echo base_url() ?>assets/data-table/js/jszip.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?php echo base_url() ?>assets/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/buttons.html5.min.js"></script>
 
-<script src="<?php echo base_url() ?>https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/daterangepicker.js"></script>
 
+<!-- CKEditor -->
+<script src="<?php echo base_url() ?>assets/pages/ckeditor/ckeditor.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('[data-toggle="popover"]').popover({
+        $('[data-bs-toggle="popover"]').popover({
             html: true,
             sanitize: false,
         })
 
         $('.select2').select2();
+        $('#modal_request .select2').select2({
+            dropdownParent: $('#modal_request')
+        });
+        $('#modal_add .select2').select2({
+            dropdownParent: $('#modal_add')
+        });
         enable_ckeditor();
 
         $('#company_id').on('change', function() {
@@ -144,18 +146,18 @@
 
         url = "<?= site_url('od_sop/data_sop') ?>";
         $('#table_sop').DataTable({
-            "destroy": true,
-            "pageLength": 10,
-            "searching": true,
-            "ordering": true,
-            "autoWidth": false,
-            "info": true,
             "lengthChange": false,
-            // "order": [[ 1, "desc"]],
+            "searching": true,
+            "info": true,
+            "paging": true,
+            "autoWidth": false,
+            "destroy": true,
+            "pageLength": 5,
             "dom": 'Bfrtip',
             buttons: [{
                 extend: 'excelHtml5',
                 text: 'Export to Excel',
+                className: 'btn btn-sm btn-success',
                 footer: true
             }],
             "ajax": {
@@ -165,27 +167,17 @@
             "columns": [{
                     "data": "id_sop",
                     'render': function(data, type, row, meta) {
+                        let starBtn = '';
+                        if ("<?php echo $this->session->userdata('user_id') ?>" == 2774 || "<?php echo $this->session->userdata('user_id') ?>" == 2843 || "<?php echo $this->session->userdata('user_id') ?>" == 2903 || "<?php echo $this->session->userdata('user_id') ?>" == 1) {
+                            starBtn = `<a href="javascript:void(0);" onclick="modal_review('${data}','${row['department']}')" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-star-fill"></i></a> `;
+                        }
                         if (row['status_review'] == null) {
-
-
-                            if ("<?php echo $this->session->userdata('user_id') ?>" == 2774 || "<?php echo $this->session->userdata('user_id') ?>" == 2843 || "<?php echo $this->session->userdata('user_id') ?>" == 2903 || "<?php echo $this->session->userdata('user_id') ?>" == 1) {
-                                return `<a href="javascript:void(0);" onclick="modal_review('${data}','${row['department']}')" class="btn btn-xs btn-warning sharp shadow">
-                            <i class="fa fa-star"></i> </a> Waiting`;
-                            } else {
-                                return `Waiting`;
-                            }
+                            return starBtn + `<span class="badge bg-warning text-dark">Waiting</span>`;
                         } else {
-                            if ("<?php echo $this->session->userdata('user_id') ?>" == 2774 || "<?php echo $this->session->userdata('user_id') ?>" == 2843 || "<?php echo $this->session->userdata('user_id') ?>" == 2903 || "<?php echo $this->session->userdata('user_id') ?>" == 1) {
-                                return `<a href="javascript:void(0);" onclick="modal_review('${data}','${row['department']}')" class="btn btn-xs btn-warning sharp shadow">
-                            <i class="fa fa-star"></i> </a> <span class="badge badge-default">${row['status_review']}</span>`;
-                            } else {
-                                return `<span class="badge badge-default">${row['status_review']}</span>`;
-                            }
+                            return starBtn + `<span class="badge bg-info">${row['status_review']}</span>`;
                         }
                     },
                     "className": "text-center"
-
-
                 },
                 {
                     "data": "company_name"
@@ -216,9 +208,9 @@
                     "data": "file",
                     "render": function(data) {
                         if (data == null || data == '') {
-                            return '<span class="label label-danger">Waiting</span>';
+                            return '<span class="badge bg-danger">Waiting</span>';
                         } else {
-                            return '<span class="label label-primary">Done</span>';
+                            return '<span class="badge bg-primary">Done</span>';
                         }
                     }
                 },
@@ -228,9 +220,8 @@
                         if (data == null || data == '') {
                             return '';
                         } else {
-                            return '<a data-fancybox="gallery" href="<?= base_url() ?>assets/files/' +
-                                data +
-                                '" class="label label-info gallery"><i class="ti-image"></i></a>'
+                            return '<a data-fancybox="gallery" href="<?= base_url() ?>assets/files/' + data +
+                                '" class="btn btn-sm btn-primary gallery"><i class="bi bi-eye"></i> View</a>'
                         }
                     }
                 },
@@ -240,8 +231,8 @@
                         if (data == null) {
                             return '';
                         } else {
-                            return '<a target="blank" href="<?= base_url() ?>assets/files/' + data +
-                                '" class="label label-info"><i class="ti-file"></i></a>'
+                            return '<a href="<?= base_url() ?>assets/files/' + data +
+                                '" class="btn btn-sm btn-info" download><i class="bi bi-download"></i> Download</a>'
                         }
                     }
                 },
@@ -257,8 +248,8 @@
                         if (data == null) {
                             return '';
                         } else {
-                            return '<a target="blank" href="<?= base_url() ?>assets/files/' + data +
-                                '" class="label label-info"><i class="ti-file"></i></a>'
+                            return '<a href="<?= base_url() ?>assets/files/' + data +
+                                '" class="btn btn-sm btn-secondary" target="_blank"><i class="bi bi-file-earmark-text"></i> Draft</a>'
                         }
                     }
                 },
@@ -266,87 +257,54 @@
                     "data": "created_by"
                 },
                 {
-                    "data": "id_parent",
+                    "data": null,
                     "render": function(data, type, row) {
                         if ("<?php echo $this->session->userdata('user_id') ?>" == 2774 || "<?php echo $this->session->userdata('user_id') ?>" == 2843 || "<?php echo $this->session->userdata('user_id') ?>" == 2903 || "<?php echo $this->session->userdata('user_id') ?>" == 1 || "<?php echo $this->session->userdata('user_id') ?>" == 4498 ||  "<?php echo $this->session->userdata('user_id') ?>" == 68 ||  "<?php echo $this->session->userdata('user_id') ?>" == 2521 ||  "<?php echo $this->session->userdata('user_id') ?>" == 2069 ||  "<?php echo $this->session->userdata('user_id') ?>" == 3961 ||  "<?php echo $this->session->userdata('user_id') ?>" == 77){
-                            if (data == null) {
-                                return `<a class="del_sop label label-danger"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `href="javascript:void(0)"><i class="ti-trash"></i></a>` +
+                            let btns = `<div class="d-flex flex-wrap gap-1" style="min-width:200px;">`;
 
-                                    `<a class="edit_sop label label-warning"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `data-company_id="` + row['company_id'] + `"` +
-                                    `data-company_name="` + row['company_name'] + `"` +
-                                    `data-type_department="` + row['type_department'] + `"` +
-                                    `data-department_id="` + row['department_id'] + `"` +
-                                    `data-department_name="` + row['department_name'] + `"` +
-                                    `data-designation_id="` + row['designation_id'] + `"` +
-                                    `data-designation_name="` + row['designation_name'] + `"` +
-                                    `data-jenis_doc="` + row['jenis_doc'] + `"` +
-                                    `data-no_doc="` + row['no_doc'] + `"` +
-                                    `data-tgl_terbit="` + row['tgl_terbit'] + `"` +
-                                    `data-tgl_update="` + row['tgl_update'] + `"` +
-                                    `data-start_date="` + row['start_date'] + `"` +
-                                    `data-end_date="` + row['end_date'] + `"` +
-                                    `data-nama_dokumen="` + row['nama_dokumen'] + `"` +
-                                    `data-file="` + row['file'] + `"` +
-                                    `data-word="` + row['word'] + `"` +
-                                    `href="javascript:void(0)">Edit</a>` +
+                            btns += `<a class="edit_sop btn btn-sm btn-warning" ` +
+                                `data-id_sop="` + row['id_sop'] + `" ` +
+                                `data-company_id="` + row['company_id'] + `" ` +
+                                `data-company_name="` + row['company_name'] + `" ` +
+                                `data-type_department="` + row['type_department'] + `" ` +
+                                `data-department_id="` + row['department_id'] + `" ` +
+                                `data-department_name="` + row['department_name'] + `" ` +
+                                `data-designation_id="` + row['designation_id'] + `" ` +
+                                `data-designation_name="` + row['designation_name'] + `" ` +
+                                `data-jenis_doc="` + row['jenis_doc'] + `" ` +
+                                `data-no_doc="` + row['no_doc'] + `" ` +
+                                `data-tgl_terbit="` + row['tgl_terbit'] + `" ` +
+                                `data-tgl_update="` + row['tgl_update'] + `" ` +
+                                `data-start_date="` + row['start_date'] + `" ` +
+                                `data-end_date="` + row['end_date'] + `" ` +
+                                `data-nama_dokumen="` + row['nama_dokumen'] + `" ` +
+                                `data-file="` + row['file'] + `" ` +
+                                `data-word="` + row['word'] + `" ` +
+                                `href="javascript:void(0)"><i class="bi bi-pencil-square"></i> Edit</a>`;
 
-                                    `<a class="add_link label label-success"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `data-nama_dokumen="` + row['nama_dokumen'] + `"` +
-                                    `href="javascript:void(0)">Relasi</a>`+
+                            btns += `<a class="del_sop btn btn-sm btn-danger" ` +
+                                `data-id_sop="` + row['id_sop'] + `" ` +
+                                `href="javascript:void(0)"><i class="bi bi-trash"></i> Delete</a>`;
 
-                                    `<a class="add_blast label label-info" id="add_blast"` +
-                                    `data-dokument="https://trusmicorp.com/od/assets/files/`+ row['file'] +`"` +
-                                    `data-nama_dokument="`+ row['nama_dokumen'] +`"` +
-                                    `href="javascript:void(0)">Blast</a>`
-                                    ;
-                            } else {
-                                return `<a class="del_sop label label-danger"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `href="javascript:void(0)"><i class="ti-trash"></i></a>` +
+                            btns += `<a class="add_link btn btn-sm btn-success" ` +
+                                `data-id_sop="` + row['id_sop'] + `" ` +
+                                `data-nama_dokumen="` + row['nama_dokumen'] + `" ` +
+                                `href="javascript:void(0)"><i class="bi bi-link-45deg"></i> Relasi</a>`;
 
-                                    `<a class="edit_sop label label-warning"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `data-company_id="` + row['company_id'] + `"` +
-                                    `data-company_name="` + row['company_name'] + `"` +
-                                    `data-type_department="` + row['type_department'] + `"` +
-                                    `data-department_id="` + row['department_id'] + `"` +
-                                    `data-department_name="` + row['department_name'] + `"` +
-                                    `data-designation_id="` + row['designation_id'] + `"` +
-                                    `data-designation_name="` + row['designation_name'] + `"` +
-                                    `data-jenis_doc="` + row['jenis_doc'] + `"` +
-                                    `data-no_doc="` + row['no_doc'] + `"` +
-                                    `data-tgl_terbit="` + row['tgl_terbit'] + `"` +
-                                    `data-tgl_update="` + row['tgl_update'] + `"` +
-                                    `data-start_date="` + row['start_date'] + `"` +
-                                    `data-end_date="` + row['end_date'] + `"` +
-                                    `data-nama_dokumen="` + row['nama_dokumen'] + `"` +
-                                    `data-id_pic="` + row['id_pic'] + `"` +
-                                    `data-no_hp="` + row['no_hp'] + `"` +
-                                    `data-word="` + row['word'] + `"` +
-                                    `href="javascript:void(0)">Edit</a>` +
+                            btns += `<a class="detail btn btn-sm btn-secondary" ` +
+                                `data-id_sop="` + row['id_sop'] + `" ` +
+                                `href="javascript:void(0)"><i class="bi bi-eye"></i> Detail</a>`;
 
-                                    `<a class="add_link label label-success"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `data-nama_dokumen="` + row['nama_dokumen'] + `"` +
-                                    `href="javascript:void(0)">Relasi</a>` +
+                            btns += `<a class="add_blast btn btn-sm btn-info" ` +
+                                `data-dokument="https://trusmicorp.com/od/assets/files/` + row['file'] + `" ` +
+                                `data-nama_dokument="` + row['nama_dokumen'] + `" ` +
+                                `href="javascript:void(0)"><i class="bi bi-megaphone"></i> Blast</a>`;
 
-                                    `<a style="background-color: #79a3ff;" class="detail label label-success"` +
-                                    `data-id_sop="` + row['id_sop'] + `"` +
-                                    `href="javascript:void(0)">Detail</a>`
-                                    
-                                    `<a class="add_blast label label-info" id="add_blast"` +
-                                    `data-dokument="https://trusmicorp.com/od/assets/files/`+ row['file'] +`"` +
-                                    `href="javascript:void(0)">Blast</a>`;
-                            }
+                            btns += `</div>`;
+                            return btns;
                         } else {
                             return ``;
                         }
-
                     }
                 }
             ]
@@ -354,6 +312,7 @@
     });
 
     function enable_ckeditor() {
+        if (typeof CKEDITOR === 'undefined') return;
         let toolbar_ = [{
                 "name": "basicstyles",
                 "groups": ["basicstyles"]
@@ -427,6 +386,7 @@
             buttons: [{
                 extend: 'excelHtml5',
                 text: 'Export to Excel',
+                className: 'btn btn-sm btn-success',
                 // footer: true
             }],
             "ajax": {
@@ -531,6 +491,7 @@
             buttons: [{
                 extend: 'excelHtml5',
                 text: 'Export to Excel',
+                className: 'btn btn-sm btn-success',
                 // footer: true
             }],
             "ajax": {

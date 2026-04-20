@@ -17,7 +17,13 @@
       "Bash(sed -i \"s|\\\\\"sop/|\\\\\"od_sop/|g\" js_sop.php)",
       "Bash(sed -i \"s|job_profile/get_departments|od_job_profile/get_departments|g\" js_sop.php)",
       "Bash(sed -i \"s|job_profile/get_no_doc|od_job_profile/get_no_doc|g\" js_sop.php)",
-      "Bash(sed -i \"s|job_profile/|od_job_profile/|g\" js_job_profile.php)"
+      "Bash(sed -i \"s|job_profile/|od_job_profile/|g\" js_job_profile.php)",
+      "Read(//c/xampp/htdocs/od/application/views/sop/**)",
+      "Read(//c/xampp/htdocs/od/application/views/job_profile/**)",
+      "Read(//c/xampp/htdocs/od/application/views/**)",
+      "Read(//c/xampp/htdocs/od/assets/css/**)",
+      "Read(//c/xampp/htdocs/od/assets/**)",
+      "Read(//c/xampp/htdocs/od/**)"
     ]
   }
 }

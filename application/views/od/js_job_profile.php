@@ -3,15 +3,12 @@
 <!-- <script src="<?= base_url() ?>assets/vendor/ckeditor/plugin.js"></script> -->
 <!-- third party js ends -->
 
-<!-- Datatable -->
-<script src="<?php echo base_url() ?>assets/js/jquery.dataTables.min.js"></script>
-
+<!-- Datatable Buttons (core already loaded in main layout) -->
 <script src="<?php echo base_url() ?>assets/data-table/js/jszip.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?php echo base_url() ?>assets/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/buttons.html5.min.js"></script>
 
-<script src="<?php echo base_url() ?>https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/daterangepicker.js"></script>
 
@@ -38,15 +35,15 @@
         }
 
         $('.select2').select2({
-            height: '100%',
+            theme: 'bootstrap-5',
             dropdownParent: $('#modal_add_interview')
         });
 
         $('#sel_dept').select2({
-            height: '100%',
+            theme: 'bootstrap-5',
         });
         $('#pic_rev').select2({
-            height: '100%',
+            theme: 'bootstrap-5',
         });
 
         $('#range').daterangepicker({
@@ -293,13 +290,10 @@
             buttons: [{
                 extend: 'excelHtml5',
                 text: 'Export to Excel',
+                className: 'btn btn-sm btn-success',
                 filename: 'Interview Job Profile',
                 footer: true
             }],
-
-            "drawCallback": function() {
-                $('.dt-buttons > .btn').addClass('btn btn-sm btn-info btn-sm');
-            },
             "ajax": {
                 'url': '<?= base_url("od_job_profile/data_jp/") ?>' + start + '/' + end + '/' + sel_dept,
                 'type': 'GET',

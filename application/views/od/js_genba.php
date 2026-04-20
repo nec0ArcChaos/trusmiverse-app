@@ -1,8 +1,6 @@
-<!-- Datatable -->
-<script src="<?php echo base_url() ?>assets/js/jquery.dataTables.min.js"></script>
+<!-- Datatable Buttons (core DataTable already loaded in main layout) -->
 <script src="<?php echo base_url() ?>assets/data-table/js/jszip.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?php echo base_url() ?>assets/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/buttons.html5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
@@ -76,6 +74,7 @@
             buttons: [{
                 extend: 'excelHtml5',
                 text: 'Export to Excel',
+                className: 'btn btn-sm btn-success',
                 footer: true
             }],
             "ajax": {

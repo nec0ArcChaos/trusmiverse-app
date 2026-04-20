@@ -4,10 +4,9 @@
 <!-- third party js ends -->
 
 
-<!-- Datatable -->
-<script src="<?php echo base_url() ?>assets/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<!-- Datatable (core already loaded in main layout) -->
 
-<script src="<?php echo base_url() ?>assets/vendor/moment/moment.min.js"></script>
+<script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/daterangepicker.js"></script>
 <!-- sweetalert -->
 <script src="<?php echo base_url() ?>assets/js/sweetalert.min.js"></script>

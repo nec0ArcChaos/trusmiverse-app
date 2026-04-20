@@ -18,9 +18,12 @@
                 </div>
                 <div class="card-body">
                 <form id="form_add_genba" class="mb-2">
+                    <input type="text" value="<?= $this->session->userdata('user_id'); ?>" name="created_by" hidden>
+
+                    <!-- Info Dasar -->
+                    <h6 class="genba-section-title">Info Dasar</h6>
                     <div class="row mb-3">
                         <div class="col-sm-6">
-                            <input type="text" value="<?= $this->session->userdata('user_id'); ?>" name="created_by" hidden>
                             <label class="me-sm-2">PIC</label>
                             <select class="form-control" name="pic" id="pic" required>
                                 <option value="" disabled selected>Select PIC</option>
@@ -43,6 +46,11 @@
                             <label class="me-sm-2">Tanggal Pelaksanaan</label>
                             <input type="text" name="tanggal" id="tanggal" class="form-control input-default" placeholder="Tanggal Pelaksanaan" required>
                         </div>
+                    </div>
+
+                    <!-- Lokasi / Organisasi -->
+                    <h6 class="genba-section-title">Lokasi / Organisasi</h6>
+                    <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Company</label>
                             <select class="form-control" name="company_id" id="company_id" required>
@@ -52,42 +60,48 @@
                                 <?php } ?>
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Departemen</label>
                             <select class="form-control" name="department_id" id="department_id" required>
                                 <option value="" disabled selected>Select Departemen</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Narasumber</label>
                             <select class="form-control select2" name="narasumber[]" id="select_narasumber" multiple>
                             </select>
                         </div>
-                    </div>
-                    <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Dokumen</label>
                             <select class="form-control" name="id_dokumen" id="id_dokumen" required>
                                 <option value="" disabled selected>Select Dokumen</option>
                             </select>
                         </div>
-                        <div class="col-sm-6">
+                    </div>
+
+                    <!-- Temuan & Analisis -->
+                    <h6 class="genba-section-title">Temuan & Analisis</h6>
+                    <div class="row mb-3">
+                        <div class="col-sm-12">
                             <label class="me-sm-2">Temuan</label>
-                            <textarea id="temuan" name="temuan" class="form-control" placeholder="Temuan...." rows="3" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px; height:50px;"></textarea>
+                            <textarea id="temuan" name="temuan" class="form-control" placeholder="Temuan...." rows="3"></textarea>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Analisa</label>
-                            <textarea id="analisa" name="analisa" class="form-control" placeholder="Analisa...." rows="3" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px; height:50px;"></textarea>
+                            <textarea id="analisa" name="analisa" class="form-control" placeholder="Analisa...." rows="3"></textarea>
                         </div>
                         <div class="col-sm-6">
                             <label class="me-sm-2">Solusi</label>
-                            <textarea id="solusi" name="solusi" class="form-control" placeholder="Solusi...." rows="3" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px; height:50px;"></textarea>
+                            <textarea id="solusi" name="solusi" class="form-control" placeholder="Solusi...." rows="3"></textarea>
                         </div>
                     </div>
+
+                    <!-- Rekomendasi & Masalah -->
+                    <h6 class="genba-section-title">Rekomendasi & Masalah</h6>
                     <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Rekomendasi</label>
@@ -114,27 +128,37 @@
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="col-sm-6">
-                            <label class="me-sm-2">Keluhan</label>
-                            <textarea id="keluhan" name="keluhan" class="form-control" placeholder="Keluhan Narasumber..." rows="3" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px; height:50px;"></textarea>
-                        </div>
                     </div>
+
+                    <!-- Feedback Narasumber -->
+                    <h6 class="genba-section-title">Feedback Narasumber</h6>
                     <div class="row mb-3">
                         <div class="col-sm-6">
-                            <label class="me-sm-2">Keinginan</label>
-                            <textarea id="keinginan" name="keinginan" class="form-control" placeholder="Keinginan Narasumber..." rows="3" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px; height:50px;"></textarea>
+                            <label class="me-sm-2">Keluhan</label>
+                            <textarea id="keluhan" name="keluhan" class="form-control" placeholder="Keluhan Narasumber..." rows="3"></textarea>
                         </div>
+                        <div class="col-sm-6">
+                            <label class="me-sm-2">Keinginan</label>
+                            <textarea id="keinginan" name="keinginan" class="form-control" placeholder="Keinginan Narasumber..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Bukti & Evaluasi -->
+                    <h6 class="genba-section-title">Bukti & Evaluasi</h6>
+                    <div class="row mb-3">
                         <div class="col-sm-6">
                             <label class="me-sm-2">Bukti Pelaksanaan</label>
                             <input type="file" class="form-control" name="file" id="file" required>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <label class="me-sm-2">Evaluasi</label>
-                            <textarea id="evaluasi" name="evaluasi" class="form-control" placeholder="Rencana Evaluasi..." rows="3" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px; height:50px;"></textarea>
+                            <textarea id="evaluasi" name="evaluasi" class="form-control" placeholder="Rencana Evaluasi..." rows="3"></textarea>
                         </div>
                     </div>
+
+                    <!-- Buttons -->
                     <div class="row mb-8">
                         <div class="col-sm-12 d-flex justify-content-end">
                             <div class="row">

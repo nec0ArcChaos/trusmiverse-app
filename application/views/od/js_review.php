@@ -8,15 +8,12 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/bower_components/pnotify/js/pnotify.buttons.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/web_support.js"></script>
 <!-- source whatsapp api & pnotify -->
-<!-- Datatable -->
-<script src="<?php echo base_url() ?>assets/js/jquery.dataTables.min.js"></script>
-
+<!-- Datatable Buttons (core already loaded in main layout) -->
 <script src="<?php echo base_url() ?>assets/data-table/js/jszip.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?php echo base_url() ?>assets/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
 <script src="<?php echo base_url() ?>assets/datatables.net-buttons/js/buttons.html5.min.js"></script>
 
-<script src="<?php echo base_url() ?>https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo base_url() ?>assets/js/moment.min.js"></script>
 <script src="<?php echo base_url() ?>assets/js/daterangepicker.js"></script>
 <script src="<?php echo base_url() ?>assets/js/jquery-3.2.1.min.js"></script>

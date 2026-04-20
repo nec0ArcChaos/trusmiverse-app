@@ -222,37 +222,32 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label single_designation">Designation</label>
-                        <!-- Select designation for single department -->
-                        <div class="col-sm-4 single_designation">
-                            <!-- update by Ade -->
-                            <select class="form-control select2" name="designation[]" id="select_designation" multiple>
-                                <!-- <option value="" disabled selected>-- Select Designation-single --</option> -->
-                            </select>
-                            <input type="hidden" id="tot_ssd">
-                        </div>
-
-                        <label class="col-sm-2 col-form-label multi_department d-none">Department</label>
-                        <div class="col-sm-4 multi_department d-none">
-                            <!-- select department for multi dept -->
-                            <select class="form-control select2" name="department_multi[]" id="select_department_multi" multiple>
-                            </select>
-                        </div>
-
                         <label class="col-sm-2 col-form-label single_department">Department</label>
-                        <!-- select department for single dept -->
-                        <div class="col-sm-4 single_department">
+                        <div class="col-sm-10 single_department">
                             <select class="form-control select2" name="department" id="select_department">
                                 <option value="" disabled selected>-- Select Department --</option>
                             </select>
                             <input type="hidden" id="tot_sd">
                         </div>
 
+                        <label class="col-sm-2 col-form-label multi_department d-none">Department</label>
+                        <div class="col-sm-10 multi_department d-none">
+                            <select class="form-control select2" name="department_multi[]" id="select_department_multi" multiple>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label single_designation">Designation</label>
+                        <div class="col-sm-10 single_designation">
+                            <select class="form-control select2" name="designation[]" id="select_designation" multiple>
+                            </select>
+                            <input type="hidden" id="tot_ssd">
+                        </div>
+
                         <label class="col-sm-2 col-form-label label-designation-multi d-none">Designation</label>
-                        <!-- Select designation for multi department by Ade -->
-                        <div class="col-sm-4 col-designation-multi mt-1 d-none">
+                        <div class="col-sm-10 col-designation-multi mt-1 d-none">
                             <select class="form-control select2" name="designation_multi[]" id="select_designation_multi_dept" multiple>
-                                <!-- <option value="" disabled selected>-- Select Designation multi dept --</option> -->
                             </select>
                             <input type="hidden" id="tot_ssd_multi_dept">
                         </div>
@@ -448,7 +443,7 @@
                         </div>
                         <div class="col-sm-6">
                             <label class="me-sm-2" for="#jadwal_diskusi"><b>Jadwal Diskusi</b> <span data-bs-toggle="popover" data-bs-title="Jadwal diskusi" data-bs-content="jadwal diskusi itu min. 3 hari setelah pengajuan">
-                                    <li class="fa fa-info-circle"></li>
+                                    <i class="bi bi-info-circle"></i>
                                 </span></label>
                             <input type="date" id="jadwal_diskusi" class="form-control" value="<?= date('Y-m-d', strtotime('+3 Days')) ?>" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px" min="<?= date('Y-m-d', strtotime('+3 Days')) ?>" name="jadwal_diskusi">
                         </div>
@@ -456,7 +451,7 @@
                     <div class="row penjelasan mb-3" style="display:none">
                         <div class="col-sm-12">
                             <label class="me-sm-2" for="#penjelasan"><b>Penjelasan</b> <span data-bs-toggle="popover" data-bs-title="Penjelasan" data-bs-content="Jelaskan dokumen apa yang sedang di ajukan">
-                                    <li class="fa fa-info-circle"></li>
+                                    <i class="bi bi-info-circle"></i>
                                 </span></label>
                             <input type="text" name="penjelasan" id="penjelasan" class="form-control" value="" style="border-width:1.5px; border-color: #D1CCCF; border-radius:20px">
                         </div>
@@ -501,7 +496,7 @@
                     <div class="row jobprofile mb-3" style="display:none">
                         <div class="col-sm-6">
                             <label class="me-sm-2" for="#authority"><b>Authority</b> <span data-bs-toggle="popover" data-bs-title="Authority" data-bs-content="Kekuatan atau hak yang diberikan kepada individu dalam sebuah perusahaan untuk membuat keputusan, mengambil tindakan, dan mengarahkan aktivitas sesuai dengan tujuan organisasi.">
-                                    <li class="fa fa-info-circle"></li>
+                                    <i class="bi bi-info-circle"></i>
                                 </span></label>
                             <textarea name="authority" id="authority" class="form-control ck"></textarea>
                         </div>
