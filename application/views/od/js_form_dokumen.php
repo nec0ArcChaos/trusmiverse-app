@@ -71,15 +71,20 @@
             settings: { placeholderText: 'Pilih PIC Mengetahui', allowDeselect: true }
         });
 
-        // ===== TinyMCE — plain editor (tanpa background A4/kop surat) =====
-        tinymce.init({
-            selector: '#content-editor',
-            plugins: 'table lists advlist link image preview code help autolink nonbreaking',
-            toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | table | link preview',
-            menubar: 'file edit view insert format table help',
-            height: 500,
-            nonbreaking_force_tab: true,
-            branding: false
+        // ===== TinyMCE — init lazy saat tab "Isi Dokumen OD" pertama kali dibuka =====
+        let tinyMCEInited = false;
+        $('#content-tab').on('shown.bs.tab', function () {
+            if (tinyMCEInited) return;
+            tinyMCEInited = true;
+            tinymce.init({
+                selector: '#content-editor',
+                plugins: 'table lists advlist link image preview code help autolink nonbreaking',
+                toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | table | link preview',
+                menubar: 'file edit view insert format table help',
+                height: 500,
+                nonbreaking_force_tab: true,
+                branding: false
+            });
         });
 
         // ===== Initial loads =====
@@ -144,8 +149,8 @@
 
     function load_approvals() {
         $.ajax({
-            type: "POST",
-            url: "<?= base_url('trusmi_memo/get_approval'); ?>",
+            type: "GET",
+            url: "<?= base_url('od_dokumen/get_approvals_json'); ?>",
             dataType: "json",
             success: function (response) {
                 const list = (response || []).map(item => ({
@@ -237,13 +242,10 @@
         const department = initDepartment.getSelected();
         const role       = initRole.getSelected();
         const cc         = initCc.getSelected();
-        const tujuan     = $('#tujuan').val();
+        const tujuan     = $('#note').val();
         const content    = tinymce.get('content-editor') ? tinymce.get('content-editor').getContent() : '';
         const approval   = $('#approval').val();
-        const fileEl     = $('#file_lampiran')[0];
-        const lampiran   = (fileEl && fileEl.files && fileEl.files[0]) ? fileEl.files[0].name : '(tidak ada)';
 
-        // Validasi dasar (Tab Detail)
         if (!judul) { Swal.fire('Error', 'Judul wajib diisi', 'error'); return; }
         if (!jenis) { Swal.fire('Error', 'Jenis wajib dipilih', 'error'); return; }
         if (!category) { Swal.fire('Error', 'Categori wajib dipilih', 'error'); return; }
@@ -254,34 +256,55 @@
         if (!priority) { Swal.fire('Error', 'Priority wajib dipilih', 'error'); return; }
         if (!company_id) { Swal.fire('Error', 'Company wajib dipilih', 'error'); return; }
         if (department.length === 0) { Swal.fire('Error', 'Department wajib dipilih', 'error'); return; }
-        if (!tujuan) { Swal.fire('Error', 'Expected Outcome wajib diisi', 'error'); return; }
-
-        // Prototype preview: tampilkan data yang akan disimpan (belum disimpan ke DB)
-        const dataPreview = {
-            judul: judul,
-            jenis: jenis,
-            category: category,
-            no_dokumen: category === 'Revisi' ? no_dokumen : '(N/A)',
-            priority: priority,
-            company_id: company_id,
-            department_id: department,
-            role_id: role,
-            cc: cc,
-            tujuan: tujuan,
-            content: content,
-            approval_id: approval || '(belum dipilih)',
-            lampiran: lampiran
-        };
-
-        console.log('Prototype data:', dataPreview);
+        if (!tujuan) { Swal.fire('Error', 'Notes wajib diisi', 'error'); return; }
 
         Swal.fire({
-            icon: 'success',
-            title: 'Prototype Preview',
-            html: '<div style="text-align:left;font-size:12px;"><pre>' +
-                JSON.stringify(dataPreview, null, 2) + '</pre></div>',
-            width: 700,
-            confirmButtonText: 'OK'
+            title: 'Simpan Dokumen OD?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+
+            const formData = new FormData();
+            formData.append('judul', judul);
+            formData.append('jenis', jenis);
+            formData.append('category', category);
+            formData.append('no_dokumen', no_dokumen || '');
+            formData.append('priority', priority);
+            formData.append('company_id', company_id);
+            department.forEach(v => formData.append('department_id[]', v));
+            role.forEach(v => formData.append('role_id[]', v));
+            cc.forEach(v => formData.append('cc[]', v));
+            formData.append('note', tujuan);
+            formData.append('content', content);
+            formData.append('approval', approval || '');
+
+            const fileEl = $('#file_lampiran')[0];
+            if (fileEl && fileEl.files && fileEl.files[0]) {
+                formData.append('file_lampiran', fileEl.files[0]);
+            }
+
+            $.ajax({
+                url: '<?= base_url("od_dokumen/insert_job_profile") ?>',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.insert) {
+                        Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Dokumen OD berhasil disimpan.' })
+                            .then(() => { window.location.href = '<?= base_url("od_dokumen") ?>'; });
+                    } else {
+                        Swal.fire('Gagal', 'Terjadi kesalahan saat menyimpan.', 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error', 'Gagal menghubungi server.', 'error');
+                }
+            });
         });
     }
 </script>

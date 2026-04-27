@@ -21,7 +21,7 @@
         border-radius: 0.375rem;
     }
 
-    #form_add_job_profile label {
+    #form_add_dokumen label {
         font-weight: 500;
     }
 

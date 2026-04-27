@@ -47,8 +47,6 @@
       .pagebreak {
         page-break-before: always;
       }
-
-      /* page-break-after works, as well */
     }
   </style>
 
@@ -124,16 +122,6 @@
       <tr class="header_row">
         <td colspan="3" style="font-size: 16px;">3. DIMENSI JABATAN</td>
       </tr>
-      <!-- <tr>
-        <td>Pengeluaran Investasi (CAPEX)</td>
-        <td class="text-center"></td>
-        <td><strong><?= $jp['capex'] ?></strong></td>
-      </tr>
-      <tr>
-        <td>Pengeluaran Operasional (OPEX)</td>
-        <td class="text-center"></td>
-        <td><strong><?= $jp['opex'] ?></strong></td>
-      </tr> -->
       <tr>
         <td>Jumlah Bawahan</td>
         <td class="text-center">:</td>
@@ -245,64 +233,9 @@
       </tr>
       <tr>
         <td colspan="3"><?= html_entity_decode($jp['kompetensi']) ?></td>
-        <!-- </tr>
-        <td colspan="3"><strong>4. <u>Soft Kompetensi:</u></strong></td>
       </tr>
-      <tr>
-        <td colspan="3"><?= html_entity_decode($jp['softkompetensi']) ?></td>
-      </tr>
-      </tr>
-        <td colspan="3"><strong>5. <u>Teknikal Kompetensi:</u></strong></td>
-      </tr> -->
-        <!-- <tr>
-        <td colspan="3"><?= html_entity_decode($jp['teknikalkompetensi']) ?></td>
-      </tr> -->
-        <!-- <tr class="pagebreak">
-        <td colspan="3"><strong>4. <u>Soft Competency:</u></strong></td>
-      </tr>
-      <tr>
-        <td colspan="3" style="padding: 0;">
-          <table class="table table-bordered pagebreak">
-            <thead>
-              <tr style="background: #d9d6d6a3;">
-                <td class="text-center"><strong>Core Competency</strong></td>
-                <td class="text-center"><strong>Std</strong></td>
-                <td class="text-center"><strong>Managerial Competency</strong></td>
-                <td class="text-center"><strong>Std</strong></td>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($softcomp as $row) { ?>
-                <tr>
-                  <td><strong><?= $row->core_comp ?></strong>
-                    <p><?= $row->core_desc ?></p>
-                  </td>
-                  <td class="text-center"><strong><?= $row->core_std ?></strong></td>
-                  <td><strong><?= $row->mng_comp ?></strong>
-                    <p><?= $row->mng_desc ?></p>
-                  </td>
-                  <td class="text-center"><strong><?= $row->mng_std ?></strong></td>
-                </tr>
-              <?php } ?>
-            </tbody>
-          </table>
-        </td>
-      </tr> -->
     </tbody>
   </table>
-
-  <!-- <table class="table table-bordered">
-    <thead>
-      <tr class="header_row">
-        <th colspan="3">TANTANGAN</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td colspan="3"><?= html_entity_decode($jp['challenge']) ?></td>
-      </tr>
-    </tbody>
-  </table> -->
 
   <table class="table table-bordered">
     <thead>
@@ -359,8 +292,6 @@
     </tbody>
   </table>
 
-
-
 </body>
 
 </html>
@@ -368,5 +299,4 @@
   <?php if ($this->uri->segment(4) != 0) { ?>
     window.print();
   <?php } ?>
-  // window.close();
 </script>

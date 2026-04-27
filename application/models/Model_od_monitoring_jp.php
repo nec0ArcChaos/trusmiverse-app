@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Model_od_job_profile extends CI_Model
+class Model_od_monitoring_jp extends CI_Model
 {
 
 	public function __construct()
@@ -9,8 +9,10 @@ class Model_od_job_profile extends CI_Model
 		parent::__construct();
 		$this->load->database();
 	}
-	public function data_user($id_user){
-        $query = "SELECT
+
+	public function data_user($id_user)
+	{
+		$query = "SELECT
 			xin_employees.user_id,
 			xin_employees.username,
 			xin_employees.contact_no,
@@ -29,8 +31,8 @@ class Model_od_job_profile extends CI_Model
 		WHERE
 			xin_employees.user_id = '$id_user'
 			";
-        return $this->db->query($query)->result();
-    }
+		return $this->db->query($query)->result();
+	}
 
 	function get_employees($company_id)
 	{
@@ -67,6 +69,11 @@ class Model_od_job_profile extends CI_Model
 	function get_designations($department_id)
 	{
 		return $this->db->query("SELECT designation_id, designation_name from xin_designations WHERE department_id = $department_id");
+	}
+
+	function get_level()
+	{
+		return $this->db->query("SELECT role_name, `level` from xin_user_roles WHERE xin_user_roles.`level` != 0");
 	}
 
 	function get_no_doc($doc_type_id, $div_id, $company_id, $department_id)
@@ -192,20 +199,20 @@ class Model_od_job_profile extends CI_Model
 	{
 		$no_jp = $this->no_jp();
 		$data_jp = array(
-			'no_jp'				=> $no_jp,
-			'no_dok'			=> $_POST['no_dok'],
-			'doc_type_id'		=> $_POST['doc_type_id'],
-			'div_id'			=> $_POST['div_id'],
-			'designation_id'	=> $_POST['designation_id'],
-			'departement_id'	=> $_POST['departement_id'],
-			'note'				=> $_POST['note'],
-			'golongan'			=> $_POST['add_golongan'],
-			'report_to'			=> $_POST['add_report_to'],
-			'prepared_by'		=> $_POST['add_prepared_by'],
-			'release_date'		=> date('Y-m-d', strtotime($_POST['add_release_date'])),
-			'status'			=> 1,
-			'created_at'		=> date('Y-m-d H:i:s'),
-			'created_by'		=> $this->session->userdata('user_id')
+			'no_jp'          => $no_jp,
+			'no_dok'         => $_POST['no_dok'],
+			'doc_type_id'    => $_POST['doc_type_id'],
+			'div_id'         => $_POST['div_id'],
+			'designation_id' => $_POST['designation_id'],
+			'departement_id' => $_POST['departement_id'],
+			'note'           => $_POST['note'],
+			'golongan'       => $_POST['add_golongan'],
+			'report_to'      => $_POST['add_report_to'],
+			'prepared_by'    => $_POST['add_prepared_by'],
+			'release_date'   => date('Y-m-d', strtotime($_POST['add_release_date'])),
+			'status'         => 1,
+			'created_at'     => date('Y-m-d H:i:s'),
+			'created_by'     => $this->session->userdata('user_id')
 		);
 		return $this->db->insert('trusmi_job_profile', $data_jp);
 	}
@@ -219,15 +226,15 @@ class Model_od_job_profile extends CI_Model
 	function update_job_profile()
 	{
 		$data_berkas = array(
-			'report_to'		=> $_POST['report_to'],
-			'tujuan'		=> $_POST['tujuan'],
-			'bawahan'		=> $_POST['bawahan'],
-			'area'			=> $_POST['area'],
-			'pendidikan'	=> $_POST['pendidikan'],
-			'pengalaman'	=> htmlentities($_POST['pengalaman']),
-			'kompetensi'	=> htmlentities($_POST['kompetensi']),
-			'authority'		=> htmlentities($_POST['authority']),
-			'status'		=> 2
+			'report_to'  => $_POST['report_to'],
+			'tujuan'     => $_POST['tujuan'],
+			'bawahan'    => $_POST['bawahan'],
+			'area'       => $_POST['area'],
+			'pendidikan' => $_POST['pendidikan'],
+			'pengalaman' => htmlentities($_POST['pengalaman']),
+			'kompetensi' => htmlentities($_POST['kompetensi']),
+			'authority'  => htmlentities($_POST['authority']),
+			'status'     => 2
 		);
 		$this->db->where('no_jp', $_POST['no_jp']);
 		return $this->db->update('trusmi_job_profile', $data_berkas);
@@ -236,10 +243,10 @@ class Model_od_job_profile extends CI_Model
 	function add_responsibility()
 	{
 		$data_responsibility = array(
-			'no_jp'				=> $_POST['no_jp'],
-			'designation_id'	=> $_POST['designation_id'],
-			'tugas'				=> $_POST['tugas'],
-			'aktifitas'			=> $_POST['aktifitas']
+			'no_jp'          => $_POST['no_jp'],
+			'designation_id' => $_POST['designation_id'],
+			'tugas'          => $_POST['tugas'],
+			'aktifitas'      => $_POST['aktifitas']
 		);
 		return $this->db->insert('trusmi_job_task', $data_responsibility);
 	}
@@ -273,10 +280,10 @@ class Model_od_job_profile extends CI_Model
 	function add_kpi()
 	{
 		$data_kpi = array(
-			'no_jp'				=> $_POST['no_jp'],
-			'designation_id'	=> $_POST['designation_id'],
-			'kpi'				=> $_POST['nama_kpi'],
-			'bobot'				=> $_POST['bobot_kpi']
+			'no_jp'          => $_POST['no_jp'],
+			'designation_id' => $_POST['designation_id'],
+			'kpi'            => $_POST['nama_kpi'],
+			'bobot'          => $_POST['bobot_kpi']
 		);
 		return $this->db->insert('trusmi_job_kpi', $data_kpi);
 	}
@@ -303,10 +310,10 @@ class Model_od_job_profile extends CI_Model
 	function add_internal()
 	{
 		$data_work_internal = array(
-			'no_jp'				=> $_POST['no_jp'],
-			'designation_id'	=> $_POST['designation_id'],
-			'tugas'				=> $_POST['hubungan_internal'],
-			'tujuan'			=> $_POST['tujuan_internal']
+			'no_jp'          => $_POST['no_jp'],
+			'designation_id' => $_POST['designation_id'],
+			'tugas'          => $_POST['hubungan_internal'],
+			'tujuan'         => $_POST['tujuan_internal']
 		);
 		return $this->db->insert('trusmi_job_work_internal', $data_work_internal);
 	}
@@ -334,10 +341,10 @@ class Model_od_job_profile extends CI_Model
 	function add_external()
 	{
 		$data_work_external = array(
-			'no_jp'				=> $_POST['no_jp'],
-			'designation_id'	=> $_POST['designation_id'],
-			'tugas'				=> $_POST['hubungan_external'],
-			'tujuan'			=> $_POST['tujuan_external']
+			'no_jp'          => $_POST['no_jp'],
+			'designation_id' => $_POST['designation_id'],
+			'tugas'          => $_POST['hubungan_external'],
+			'tujuan'         => $_POST['tujuan_external']
 		);
 		return $this->db->insert('trusmi_job_work_external', $data_work_external);
 	}

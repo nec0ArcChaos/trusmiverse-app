@@ -3,7 +3,7 @@
         <div class="row align-items-center page-title">
             <div class="col-8 col-md mb-2 mb-sm-0">
                 <h5 class="mb-0"><?= $pageTitle; ?></h5>
-                <p class="text-secondary">Form tambah data Job Profile</p>
+                <p class="text-secondary">Form tambah data Dokumen OD</p>
             </div>
         </div>
         <div class="row">
@@ -12,7 +12,7 @@
                     <div class="col-12 col-md-6">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="javascript:void(0)">Trusmiverse</a></li>
-                            <li class="breadcrumb-item"><a href="<?= base_url('od_job_profile') ?>">Job Profile</a></li>
+                            <li class="breadcrumb-item"><a href="<?= base_url('od_dokumen') ?>">Dokumen OD</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Tambah</li>
                         </ol>
                     </div>
@@ -42,7 +42,7 @@
                                     <button class="nav-link" id="content-tab" data-bs-toggle="tab"
                                         data-bs-target="#content-pane" type="button" role="tab"
                                         aria-controls="content-pane" aria-selected="false">
-                                        Isi Job Profile
+                                        Isi Dokumen OD
                                     </button>
                                 </li>
                                 <li class="nav-item" role="presentation">
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form id="form_add_job_profile">
+                    <form id="form_add_dokumen">
                         <div class="tab-content" id="jpTabContent">
                             <!-- ========== TAB: DETAIL ========== -->
                             <div class="tab-pane fade show active" id="detail-pane" role="tabpanel"
@@ -69,7 +69,7 @@
                                             <div class="input-group input-group-lg">
                                                 <span class="input-group-text text-theme bg-white border-end-0"
                                                     data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Masukkan judul utama untuk job profile ini">
+                                                    title="Masukkan judul utama untuk dokumen OD ini">
                                                     <i class="bi bi-align-top"></i>
                                                 </span>
                                                 <div class="form-floating">
@@ -93,9 +93,11 @@
                                                 <div class="form-floating">
                                                     <select name="jenis" id="jenis" class="form-control">
                                                         <option value="" selected disabled>-Choose-</option>
-                                                        <option value="SOP">SOP</option>
-                                                        <option value="JP">Job Profile</option>
-                                                        <option value="IK">Instruksi Kerja (IK)</option>
+                                                        <?php foreach ($master as $item): ?>
+                                                            <?php if ($item->jenis !== null && $item->jenis !== ''): ?>
+                                                                <option value="<?= $item->id ?>"><?= $item->jenis ?></option>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
                                                     </select>
                                                     <label>Jenis <b class="text-danger small">*</b></label>
                                                 </div>
@@ -155,8 +157,8 @@
                                                     <select name="priority" id="priority" class="form-control">
                                                         <option value="" selected disabled>-Choose-</option>
                                                         <?php foreach ($master as $item): ?>
-                                                            <?php if ($item->priority !== null): ?>
-                                                                <option value="<?= $item->id ?>"><?= $item->priority ?></option>
+                                                            <?php if ($item->priority !== null && $item->priority !== ''): ?>
+                                                                <option value="<?= $item->priority ?>"><?= $item->priority ?></option>
                                                             <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     </select>
@@ -249,18 +251,18 @@
                                         </div>
                                     </div>
 
-                                    <!-- Expected Outcome -->
+                                    <!-- Notes -->
                                     <div class="col-12 mb-2">
                                         <div class="form-group mb-1 position-relative check-valid judul">
-                                            <label>Expected Outcome <b class="text-danger small">*</b></label>
-                                            <textarea name="tujuan" class="form-control border-custom" id="tujuan"
-                                                rows="4" placeholder="Isikan tujuan atau expected outcome"></textarea>
+                                            <label>Notes <b class="text-danger small">*</b></label>
+                                            <textarea name="note" class="form-control border-custom" id="note"
+                                                rows="4" placeholder="Isikan catatan untuk dokumen ini"></textarea>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- ========== TAB: ISI JOB PROFILE ========== -->
+                            <!-- ========== TAB: ISI DOKUMEN OD ========== -->
                             <div class="tab-pane fade" id="content-pane" role="tabpanel"
                                 aria-labelledby="content-tab" tabindex="0">
                                 <div class="row">
@@ -357,7 +359,7 @@
                     </form>
                 </div>
                 <div class="card-footer text-end">
-                    <a href="<?= base_url('od_job_profile') ?>" class="btn btn-danger btn-sm light">
+                    <a href="<?= base_url('od_dokumen') ?>" class="btn btn-danger btn-sm light">
                         <i class="bi bi-x-circle"></i> Cancel
                     </a>
                     <button type="button" class="btn btn-sm btn-primary" onclick="save_form()">

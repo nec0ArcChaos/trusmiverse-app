@@ -33,7 +33,7 @@
         $('#company_id').on('change', function() {
             let id = $(this).val();
             $.ajax({
-                url: '<?php echo base_url() ?>od_job_profile/get_departments/' + id,
+                url: '<?php echo base_url() ?>od_dokumen/get_departments/' + id,
                 type: 'GET',
                 dataType: 'JSON',
                 success: function(data) {
@@ -1424,7 +1424,7 @@
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('od_job_profile/get_no_doc'); ?>",
+                url: "<?= base_url('od_dokumen/get_no_doc'); ?>",
                 data: {
                     doc_type_id: doc_type,
                     div_id: division,

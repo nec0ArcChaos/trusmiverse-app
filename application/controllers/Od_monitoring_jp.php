@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Od_job_profile extends CI_Controller
+class Od_monitoring_jp extends CI_Controller
 {
 
 	function __construct()
@@ -9,7 +9,7 @@ class Od_job_profile extends CI_Controller
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->library('session');
-		$this->load->model('model_od_job_profile', 'model');
+		$this->load->model('model_od_monitoring_jp', 'model');
 		$this->load->model('model_od_review', 'review');
 		if ($this->session->userdata('user_id') != "") {
 		} else {
@@ -19,10 +19,10 @@ class Od_job_profile extends CI_Controller
 
 	function index()
 	{
-		$data['pageTitle'] 	= "Job Profile";
-		$data['css'] 		= "od/css_job_profile";
-		$data['js'] 		= "od/js_job_profile";
-		$data['content'] 	= "od/index_job_profile";
+		$data['pageTitle'] = "Job Profile";
+		$data['css']       = "od/css_monitoring_jp";
+		$data['js']        = "od/js_monitoring_jp";
+		$data['content']   = "od/index_monitoring_jp";
 
 		$user = $this->model->data_user($this->session->userdata('user_id'));
 
@@ -44,21 +44,6 @@ class Od_job_profile extends CI_Controller
 		$this->load->view('layout/main', $data);
 	}
 
-	function form_add()
-	{
-		$data['pageTitle'] = "Tambah Job Profile";
-		$data['css']       = "od/css_form_job_profile";
-		$data['js']        = "od/js_form_job_profile";
-		$data['content']   = "od/form_job_profile";
-
-		$data['companies'] = $this->model->get_companies()->result();
-		$data['roles']     = $this->db->where_not_in('role_id', [1, 11, 12, 13, 14])
-			->get('xin_user_roles')->result();
-		$data['master']    = $this->db->get('trusmi_m_memo')->result();
-
-		$this->load->view('layout/main', $data);
-	}
-
 	function print_($no_jp, $level)
 	{
 		$data['jp']       = $this->model->data_jp(null, null, null, $no_jp)->row_array();
@@ -66,7 +51,7 @@ class Od_job_profile extends CI_Controller
 		$data['kpi']      = $this->model->get_kpi($no_jp);
 		$data['internal'] = $this->model->get_internal($no_jp);
 		$data['external'] = $this->model->get_external($no_jp);
-		$this->load->view('od/print_job_profile', $data);
+		$this->load->view('od/print_monitoring_jp', $data);
 	}
 
 	public function hashApplicantId($applicant_id)
@@ -94,6 +79,12 @@ class Od_job_profile extends CI_Controller
 	function get_review($no_jp)
 	{
 		$data['data'] = $this->review->get_review($no_jp);
+		echo json_encode($data);
+	}
+
+	function get_history($id_review)
+	{
+		$data['data'] = $this->review->get_history($id_review);
 		echo json_encode($data);
 	}
 
@@ -144,7 +135,7 @@ class Od_job_profile extends CI_Controller
 				$no_dok = $row->no_doc . $max_no_doc;
 			}
 		}
-		echo json_encode($no_dok);
+		echo json_encode($no_dok ?? null);
 	}
 
 	function insert_job_profile()
@@ -168,7 +159,7 @@ class Od_job_profile extends CI_Controller
 	function get_jp()
 	{
 		$no_jp = $_POST['no_jp'];
-		$data = $this->model->data_jp(null, null, null, $no_jp)->result();
+		$data  = $this->model->data_jp(null, null, null, $no_jp)->result();
 		echo json_encode($data);
 	}
 

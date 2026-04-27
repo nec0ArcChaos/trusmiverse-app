@@ -23,7 +23,16 @@
       "Read(//c/xampp/htdocs/od/application/views/**)",
       "Read(//c/xampp/htdocs/od/assets/css/**)",
       "Read(//c/xampp/htdocs/od/assets/**)",
-      "Read(//c/xampp/htdocs/od/**)"
+      "Read(//c/xampp/htdocs/od/**)",
+      "Bash(xargs grep *)",
+      "Bash(grep -r \"FROM trusmi_\\\\|FROM \\\\`trusmi_\" application/ --include=\"*.php\" -o)",
+      "Bash(trusmi_t_od)",
+      "Bash(grep -r \"trusmi_t_od\\\\|`trusmi_t_od`\" . --include=\"*.php\" --include=\"*.sql\")",
+      "Bash(grep -r '$this->load->database\\\\\\('\\\\''' application/models '--include=*.php' -h)",
+      "Bash(php -r ' *)",
+      "Bash(C:/xampp/mysql/bin/mysql.exe -h 192.168.225.175 -P 1776 -u app_2323 '-p]T4@w}w_6HNqqT^6' hris -e ' *)",
+      "Bash(\"C:/xampp/mysql/bin/mysql.exe\" -h 192.168.225.175 -P 1776 -u app_2323 \"-p]T4@w}w_6HNqqT^6\" hris -e \"SELECT menu_id, parent_id, menu_nm, menu_url, level, no_urut FROM trusmi_navigation WHERE parent_id = 212 ORDER BY no_urut;\")",
+      "Bash(\"C:/xampp/mysql/bin/mysql.exe\" -h 192.168.225.175 -P 1776 -u app_2323 \"-p]T4@w}w_6HNqqT^6\" hris -e \"DESCRIBE trusmi_navigation;\")"
     ]
   }
 }
